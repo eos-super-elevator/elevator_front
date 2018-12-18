@@ -1,8 +1,12 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Super Elevator
 
-In the project directory, you can run:
+This application is made for an intersection project with IT AKADEMY.
+
+Super Elevator is an app which allows to control elevators with our computer, tablet or mobile. This app is made by EOS, a fictive company composed by 5 developpers: Alexandre Rousseau, Fabien Billard, Julie Nginn, Safia Gobet and Wilfried Atride.
+
+To control the elevator, you need to press the number button with the floor you want to go. You also can lock/unlock the floor accessibility.
 
 ### `npm start`
 
