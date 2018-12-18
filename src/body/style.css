@@ -1,0 +1,23 @@
+.body {
+  display: flex;
+  height: 90vh;
+}
+.elevator-container {
+  flex-basis: 50%;
+}
+.elevator {
+  height: 100%;
+  width: 400px;
+  margin: auto;
+  border: 1px solid black;
+}
+.keypad-container {
+  flex-basis: 50%;
+}
+.keypad {
+  height: 500px;
+  width: 400px;
+  margin: 50px auto;
+  border: 1px solid black;
+  border-radius: 5%;
+}
