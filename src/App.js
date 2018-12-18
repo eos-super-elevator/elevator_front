@@ -1,8 +1,9 @@
 import React from 'react'
+import Header from './header'
 
 const App = () => 
       <div className="App">
-        <h1>Super Elevator</h1>
+        <Header />
       </div>
 
 export default App
