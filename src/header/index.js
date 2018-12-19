@@ -1,7 +1,8 @@
 import React from 'react'
 import './style.css'
 
-const Header = () => 
+const Header = () =>
+
     <div className="header">
       <a href="/">
         <img className="logo" src='../images/eos_logo.png' alt="logo"/>
