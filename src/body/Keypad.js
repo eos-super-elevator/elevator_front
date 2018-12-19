@@ -47,12 +47,14 @@ class Keypad extends Component{
                     <div className="screen">
                         <div className="numberEmp">{this.state.floor}</div>
                         <div className="arrow">
-                            <span>{this.state.waytoGo}</span>
                             <span>
                                 {this.state.waytoGo === 3 && <FontAwesomeIcon icon={faAtom} />}
                                 {this.state.waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
                                 {this.state.waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
                             </span>
+                        </div>
+                        <div className="ElevatorRange">
+                            30 Mètre
                         </div>
 
                     </div>
