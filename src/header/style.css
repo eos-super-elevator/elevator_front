@@ -1,6 +1,7 @@
-.header .logo {
-  display: inline-block;
+.header {
+  margin-top: 10px;
+  display: flex;
 }
-.header .title {
-  display: inline-block;
+.header .logo {
+  height: 70px;
 }
