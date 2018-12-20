@@ -1,6 +1,7 @@
-import React,{Component} from 'react'
+import React,{Component, NumberList} from 'react'
 import {faArrowDown, faArrowUp, faAtom, faKey} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import  { } from 'load'
 
 class Keypad extends Component{
 
@@ -41,16 +42,19 @@ class Keypad extends Component{
 
 
     render() {
+        const {waytoGo,floor} = this.state
+        const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
         return (
             <div className="keypad-container">
                 <div className="keypad">
                     <div className="screen">
-                        <div className="numberEmp">{this.state.floor}</div>
+                        <div className="numberEmp">{floor}</div>
                         <div className="arrow">
                             <span>
-                                {this.state.waytoGo === 3 && <FontAwesomeIcon icon={faAtom} />}
-                                {this.state.waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
-                                {this.state.waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
+                                {waytoGo === 3 && <FontAwesomeIcon icon={faAtom} />}
+                                {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
+                                {waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
                             </span>
                         </div>
                         <div className="ElevatorRange">
@@ -60,6 +64,10 @@ class Keypad extends Component{
                     </div>
                     <div id="keyboard">
                         <ol className="keys">
+                            {for(var i=0;i<9;i++){
+
+                                }
+                            }
                             <li onClick={this.checkFloor.bind(this,1)}>1</li>
                             <li onClick={this.checkFloor.bind(this,2)}>2</li>
                             <li onClick={this.checkFloor.bind(this,3)}>3</li>
