@@ -12,7 +12,6 @@ class Elevator extends Component {
       elevatorPosition: 0,
       doorsIsOpened: true
     }
-    this.stages = createRef()
     this.doors = createRef()
     this.leftDoor = createRef()
     this.rightDoor = createRef()
@@ -22,28 +21,25 @@ class Elevator extends Component {
     const { currentFloor } = this.state
     const targetFloor = e.target.value
     const doorsPosition = this.doors.current.offsetTop
-    const totalHeight = this.stages.current.clientHeight
-    const margin = (totalHeight - (55 * 10)) / 10 //Get the margin between two stages
-    const stageHeight = margin + 55
     
     const node = ReactDOM.findDOMNode(this)
-    const allFloors = document.querySelectorAll('.floor')
-    const rightFloorNode = node.querySelector(`.right-floor-${targetFloor}`)
-    const leftFloorNode = node.querySelector(`.left-floor-${targetFloor}`)
+    const allFloors = document.querySelectorAll('.arrow')
+    const arrowUpNode = node.querySelector(`.arrow-up-${targetFloor}`)
+    const arrowDownNode = node.querySelector(`.arrow-down-${targetFloor}`)
     
     allFloors.forEach(floor => {
       floor.classList.remove('active')
     })
 
     if (currentFloor < targetFloor ) {
-      const doorsTopPosition = doorsPosition - (targetFloor * stageHeight)
+      const doorsTopPosition = doorsPosition - (targetFloor * 60)
       const newDoorsPosition = doorsPosition - doorsTopPosition
       this.setState({ 
         currentFloor: targetFloor, 
         elevatorPosition: newDoorsPosition,
         doorsIsOpened: false
       })
-      rightFloorNode.classList.add('active')
+      arrowUpNode.classList.add('active')
       setTimeout(() => {
         this.setState({ 
           doorsIsOpened: true
@@ -53,14 +49,14 @@ class Elevator extends Component {
         })
       }, 3000) //Change the state when the animation is ended
     } else if (currentFloor > targetFloor) {
-      const doorsTopPosition = doorsPosition + (targetFloor * stageHeight)
+      const doorsTopPosition = doorsPosition + (targetFloor * 60)
       const newDoorsPosition = doorsTopPosition - doorsPosition
       this.setState({ 
         currentFloor: targetFloor, 
         elevatorPosition: newDoorsPosition,
         doorsIsOpened: false
       })
-      leftFloorNode.classList.add('active')
+      arrowDownNode.classList.add('active')
       setTimeout(() => {
         this.setState({ 
           doorsIsOpened: true
@@ -88,12 +84,12 @@ class Elevator extends Component {
           <div className="left">
             {reverse(floors.map((floor, index) => 
               <div ref={this.leftDoor} className={`floor left-floor-${floor}`} key={index}>
-                <FaArrowDown className="arrow-down" />
+                <FaArrowDown className={`arrow arrow-down-${floor}`} />
               </div>
             ))}
           </div>
           <div className="center">
-              <div className="stages" ref={this.stages}>
+              <div className="stages">
                 {reverse(floors.map((floor, index) => 
                   <div className={`stage stage-${floor}`} key={index}>
                     <span className="stage-number">{floor}</span>
@@ -108,7 +104,7 @@ class Elevator extends Component {
           <div className="right">
           {reverse(floors.map((floor, index) => 
               <div ref={this.rightDoor} className={`floor right-floor-${floor}`} key={index}>
-                <FaArrowUp className="arrow-up" />
+                <FaArrowUp className={`arrow arrow-up-${floor}`} />
               </div>
           ))}
           </div>
