@@ -14,6 +14,7 @@ class Elevator extends Component {
     }
     this.stages = createRef()
     this.doors = createRef()
+    this.leftDoor = createRef()
     this.rightDoor = createRef()
   }
 
@@ -26,8 +27,14 @@ class Elevator extends Component {
     const stageHeight = margin + 55
     
     const node = ReactDOM.findDOMNode(this)
-    const child = node.querySelector(`.right-floor-${targetFloor}`)
+    const allFloors = document.querySelectorAll('.floor')
+    const rightFloorNode = node.querySelector(`.right-floor-${targetFloor}`)
+    const leftFloorNode = node.querySelector(`.left-floor-${targetFloor}`)
     
+    allFloors.forEach(floor => {
+      floor.classList.remove('active')
+    })
+
     if (currentFloor < targetFloor ) {
       const doorsTopPosition = doorsPosition - (targetFloor * stageHeight)
       const newDoorsPosition = doorsPosition - doorsTopPosition
@@ -36,12 +43,15 @@ class Elevator extends Component {
         elevatorPosition: newDoorsPosition,
         doorsIsOpened: false
       })
+      rightFloorNode.classList.add('active')
       setTimeout(() => {
         this.setState({ 
           doorsIsOpened: true
         })
+        allFloors.forEach(floor => {
+          floor.classList.remove('active')
+        })
       }, 3000) //Change the state when the animation is ended
-      console.log(this.rightDoor)
     } else if (currentFloor > targetFloor) {
       const doorsTopPosition = doorsPosition + (targetFloor * stageHeight)
       const newDoorsPosition = doorsTopPosition - doorsPosition
@@ -50,9 +60,13 @@ class Elevator extends Component {
         elevatorPosition: newDoorsPosition,
         doorsIsOpened: false
       })
+      leftFloorNode.classList.add('active')
       setTimeout(() => {
         this.setState({ 
           doorsIsOpened: true
+        })
+        allFloors.forEach(floor => {
+          floor.classList.remove('active')
         })
       }, 3000)
     } else {
@@ -73,7 +87,7 @@ class Elevator extends Component {
         <div className="elevator">
           <div className="left">
             {reverse(floors.map((floor, index) => 
-              <div className={`floor left-floor-${floor}`} key={index}>
+              <div ref={this.leftDoor} className={`floor left-floor-${floor}`} key={index}>
                 <FaArrowDown className="arrow-down" />
               </div>
             ))}

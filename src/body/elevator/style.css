@@ -23,7 +23,7 @@
   position: relative;
 }
 .elevator .right .floor, .elevator .left .floor {
-  border: 1px solid black;
+  border: 1px solid #777;
   height: 50px;
   width: 50%;
   line-height: 70px;
@@ -78,4 +78,5 @@
 }
 .floor.active {
   background-color: #47C2EA;
+  box-shadow: 0 0 5px 0 #47C2EA inset, 0 0 10px 2px #47C2EA;
 }
