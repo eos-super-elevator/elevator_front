@@ -1,7 +1,7 @@
 import React from 'react'
 import './style.css'
 import Elevator from './elevator'
-import Keypad from './Keypad'
+import Keypad from './keypads'
 
 const index = () => 
   <div className="body">
