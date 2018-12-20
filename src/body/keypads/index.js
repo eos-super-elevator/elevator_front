@@ -20,7 +20,7 @@ class Keypad extends Component{
         this.setState({
             floor
         });
-        
+
         if ((this.state.lastFloor > floor) || (this.state.lastFloor < floor) || (this.state.lastFloor == null) ){
 
             if (this.state.lastFloor > floor) {
@@ -58,7 +58,6 @@ class Keypad extends Component{
                         <div className="numberEmp">{floor}</div>
                         <div className="arrow">
                             <span>
-                                {waytoGo === 3 && <FontAwesomeIcon icon={faAtom} />}
                                 {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
                                 {waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
                             </span>
@@ -68,10 +67,10 @@ class Keypad extends Component{
                         </div>
 
                     </div>
-                    <div id="keyboard">
+                    <div className="keyboard">
                         <ol className="keys">
                             { reverse(numbers.map((number) =>
-                                <li onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
+                                <li className="key" onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
                                     {number}
                                 </li>
                                 ))
@@ -87,7 +86,7 @@ class Keypad extends Component{
                             {/*<li onClick={this.checkFloor.bind(this,9)}>9</li>*/}
                             {/*<li></li>*/}
                             {/*<li onClick={this.checkFloor.bind(this,0)}>RDC</li>*/}
-                            <li><FontAwesomeIcon icon={faKey} /></li>
+                            <li className="key"><FontAwesomeIcon icon={faKey} /></li>
                         </ol>
                     </div>
                 </div>
