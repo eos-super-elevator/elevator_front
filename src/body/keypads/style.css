@@ -1,0 +1,77 @@
+.keypad-container {
+    flex-basis: 50%;
+}
+.keypad {
+    height: 500px;
+    width: 400px;
+    margin: 50px auto;
+    border: 1px solid white;
+    border-radius: 5%;
+    background-color: black;
+}
+
+
+div#keyboard {
+    text-align: center;
+    width:400px;
+    height:150px;
+    margin:0 auto;
+    padding: auto;
+}
+ol.keys {
+    list-style-type:none;
+}
+
+ol.keys li {
+    width:25%;
+    display:block;
+    text-align:center;
+    height:2em;
+    float:left;
+    font-size:1.3em;
+    font-family:sans-serif;
+    padding-top:.7em;
+    border:1px solid rgb(100,100,100);
+    color:white;
+    background-color:rgba(0,0,0,.8);
+}
+
+ol.keys li:hover {
+    cursor:pointer;
+}
+ol.keys li:active {
+    background-color:rgb(200,200,200);
+    color:#000;
+}
+
+.screen {
+    clear:both;
+    width:300px;
+    margin:0 auto;
+    display:block;
+    /*background-color:rgba(0,0,0,.9);*/
+    color:black;
+    background-color: white;
+    font-family:'Helvetica';
+    font-size:2em;
+    margin-top:4em;
+    padding:.3em;
+    height:1.3em;
+    display: flex;
+}
+
+.numberEmp{
+    color: black;
+    font-size: 15px;
+    margin: auto;
+}
+.arrow{
+    margin: auto;
+    color: black;
+    font-size: 15px;
+}
+
+.ElevatorRange{
+    font-size: 20px;
+    margin: auto;
+}

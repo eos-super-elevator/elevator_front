@@ -1,7 +1,8 @@
 import React,{Component, NumberList} from 'react'
 import {faArrowDown, faArrowUp, faAtom, faKey} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import  { } from 'load'
+import  reverse from 'lodash/reverse'
+import './style.css'
 
 class Keypad extends Component{
 
@@ -40,6 +41,11 @@ class Keypad extends Component{
     };
 
 
+    checkHeight = () => {
+
+    }
+
+
 
     render() {
         const {waytoGo,floor} = this.state
@@ -64,21 +70,23 @@ class Keypad extends Component{
                     </div>
                     <div id="keyboard">
                         <ol className="keys">
-                            {for(var i=0;i<9;i++){
-
-                                }
+                            { reverse(numbers.map((number) =>
+                                <li onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
+                                    {number}
+                                </li>
+                                ))
                             }
-                            <li onClick={this.checkFloor.bind(this,1)}>1</li>
-                            <li onClick={this.checkFloor.bind(this,2)}>2</li>
-                            <li onClick={this.checkFloor.bind(this,3)}>3</li>
-                            <li onClick={this.checkFloor.bind(this,4)}>4</li>
-                            <li onClick={this.checkFloor.bind(this,5)}>5</li>
-                            <li onClick={this.checkFloor.bind(this,6)}>6</li>
-                            <li onClick={this.checkFloor.bind(this,7)}>7</li>
-                            <li onClick={this.checkFloor.bind(this,8)}>8</li>
-                            <li onClick={this.checkFloor.bind(this,9)}>9</li>
-                            <li></li>
-                            <li onClick={this.checkFloor.bind(this,0)}>RDC</li>
+                            {/*<li onClick={this.checkFloor.bind(this,1)}>1</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,2)}>2</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,3)}>3</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,4)}>4</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,5)}>5</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,6)}>6</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,7)}>7</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,8)}>8</li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,9)}>9</li>*/}
+                            {/*<li></li>*/}
+                            {/*<li onClick={this.checkFloor.bind(this,0)}>RDC</li>*/}
                             <li><FontAwesomeIcon icon={faKey} /></li>
                         </ol>
                     </div>
