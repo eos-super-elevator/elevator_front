@@ -1,6 +1,6 @@
 import React from 'react'
 import './style.css'
-import Elevator from './Elevator'
+import Elevator from './elevator'
 import Keypad from './Keypad'
 
 const index = () => 
