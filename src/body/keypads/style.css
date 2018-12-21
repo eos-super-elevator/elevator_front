@@ -80,3 +80,11 @@
     font-size: 20px;
     margin: auto;
 }
+.keypad .arrow {
+  animation: blinker 2s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
