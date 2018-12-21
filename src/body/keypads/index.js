@@ -62,7 +62,7 @@ class Keypad extends Component{
                             </span>
                         </div>
                         <div className="ElevatorRange">
-                            30 M
+                            30m
                         </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@ class Keypad extends Component{
                             {/*<li onClick={this.checkFloor.bind(this,9)}>9</li>*/}
                             {/*<li></li>*/}
                             {/*<li onClick={this.checkFloor.bind(this,0)}>RDC</li>*/}
-                            <li className="key"><FontAwesomeIcon icon={faKey} /></li>
+                            <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
                         </ol>
                     </div>
                 </div>

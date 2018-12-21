@@ -77,10 +77,19 @@
     font-size: 25px;
 }
 .ElevatorRange{
-    font-size: 20px;
+    font-size: 17px;
+    padding-top: 10px;
     margin: auto;
 }
+.faKey {
+  padding-right: 105px;
+}
+li svg {
+  margin-left: 83px;
+  font-size: 42px !important;
+}
 .keypad .arrow {
+  font-size: 50px;
   animation: blinker 2s linear infinite;
 }
 @keyframes blinker {
