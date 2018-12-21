@@ -1,4 +1,4 @@
-import React,{Component, NumberList} from 'react'
+import React,{Component} from 'react'
 import {faArrowDown, faArrowUp, faAtom, faKey} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import  reverse from 'lodash/reverse'
@@ -10,8 +10,9 @@ class Keypad extends Component{
         super (props);
         this.state = {
             floor : null,
-            lastFloor : null,
-            waytoGo: null
+            lastFloor : 0,
+            waytoGo: null,
+            currentHeight: 0
         };
     }
 
@@ -24,24 +25,80 @@ class Keypad extends Component{
         if ((this.state.lastFloor > floor) || (this.state.lastFloor < floor) || (this.state.lastFloor == null) ){
 
             if (this.state.lastFloor > floor) {
-                // this.state.waytoGo = <FontAwesomeIcon icon={faArrowDown} />;
                 this.state.waytoGo = 1;
             }else if (this.state.lastFloor < floor){
-                // this.state.waytoGo = <FontAwesomeIcon icon={faArrowUp} />;
                 this.state.waytoGo = 2;
             }
+            this.checkHeight(floor,this.state.lastFloor);
             this.state.lastFloor = floor;
         }else {
-            // this.state.waytoGo = <FontAwesomeIcon icon={faAtom} />;
+
             this.state.waytoGo = 3;
         }
 
-        // this.setState({ lastFloor = floor });
-        // this.checkFloor(floor).bind(this,floor);
     };
 
+    /*
+    * Tableau avec chaque étage ainsi que sa hauteur en mètres (1,33 m par seconde de vitesse de montée)
+    * En fonction de l'étage selectionné et de l'étage de départ faire le calcul correspondant
+    * variable :
+    * - L'hauteur au départ
+    * - L'hauteur cible
+    * - Temps nécéssaire pour parcourir le chemin : 3 sec/étages
+    * -
+    * */
 
-    checkHeight = () => {
+    decrementer = (timeTravel, startTravel ) => {
+        console.log('time travel :'+ timeTravel + 'start travel : ' +startTravel)
+        // setTimeout( function () {
+        //     for (let i = 0; timeTravel > i; i++)
+        //     {
+        //         if (startTravel < timeTravel) {
+        //             startTravel++;
+        //             console.log(startTravel);
+        //
+        //         }
+        //     }
+        // }, 10000);
+            if ( startTravel < timeTravel ) {
+                startTravel++ ;
+                const id = setInterval(this.decrementer(timeTravel,startTravel), 1000);
+                return () => clearInterval(id);
+            }
+
+
+    }
+    checkHeight = (floor, lastFloor) => {
+        const heightStart = 4 * lastFloor;
+        const heightEnd = 4 * floor;
+        let travelingHeight = 0;
+        let floorVisited = 0;
+        if(floor > lastFloor){
+            //Monter
+            console.log('Etage cible :'+ floor);
+            console.log('Etage de départ : ' + lastFloor);
+            console.log('Hauteur de départ ' + heightStart);
+            console.log("Hauteur de d'arrivé " + heightEnd);
+            floorVisited = floor - lastFloor;
+            console.log("nombre d'étage à parcourir :"+ floorVisited);
+            travelingHeight = heightEnd - heightStart;
+            console.log("Distance à parcourir " + travelingHeight);
+            let timeTravel = travelingHeight * (3/4);
+            console.log('time travel '+ timeTravel)
+            setTimeout(this.decrementer(timeTravel,0), 1000);
+        }else{
+            //Descendre
+            console.log('Etage cible :'+ floor);
+            console.log('Etage de départ : ' + lastFloor);
+            console.log('Hauteur de départ ' + heightStart);
+            console.log("Hauteur de d'arrivé " + heightEnd);
+            console.log("nombre d'étage à parcourir :"+ floorVisited);
+            travelingHeight = heightStart- heightEnd;
+            console.log("Distance à parcourir " + travelingHeight);
+            let timeTravel = travelingHeight * (3/4);
+            let startTravel = 0;
+            setTimeout(this.decrementer(timeTravel,startTravel), 1000);
+        }
 
     }
 
@@ -64,7 +121,7 @@ class Keypad extends Component{
                             </span>
                         </div>
                         <div className="ElevatorRange">
-                            30 Mètre
+                            {} Mètre
                         </div>
 
                     </div>
@@ -74,7 +131,7 @@ class Keypad extends Component{
                                 <li onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
                                     {number}
                                 </li>
-                                ))
+                            ))
                             }
                             {/*<li onClick={this.checkFloor.bind(this,1)}>1</li>*/}
                             {/*<li onClick={this.checkFloor.bind(this,2)}>2</li>*/}
