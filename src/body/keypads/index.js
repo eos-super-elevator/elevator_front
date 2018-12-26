@@ -15,7 +15,6 @@ class Keypad extends Component{
         };
     }
 
-
     checkFloor = (floor) => {
         this.setState({
             floor
@@ -40,7 +39,6 @@ class Keypad extends Component{
         // this.checkFloor(floor).bind(this,floor);
     };
 
-
     checkHeight = () => {
 
     }
@@ -56,6 +54,7 @@ class Keypad extends Component{
                 <div className="keypad">
                     <div className="screen">
                         <div className="numberEmp">{floor}</div>
+                        <div className="test">
                         <div className="arrow">
                             <span>
                                 {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
@@ -63,9 +62,9 @@ class Keypad extends Component{
                             </span>
                         </div>
                         <div className="ElevatorRange">
-                            30 Mètre
+                            30m
                         </div>
-
+                        </div>
                     </div>
                     <div className="keyboard">
                         <ol className="keys">
@@ -86,16 +85,13 @@ class Keypad extends Component{
                             {/*<li onClick={this.checkFloor.bind(this,9)}>9</li>*/}
                             {/*<li></li>*/}
                             {/*<li onClick={this.checkFloor.bind(this,0)}>RDC</li>*/}
-                            <li className="key"><FontAwesomeIcon icon={faKey} /></li>
+                            <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
                         </ol>
                     </div>
                 </div>
             </div>
         )
     }
-
-
 }
-
 
 export default Keypad
