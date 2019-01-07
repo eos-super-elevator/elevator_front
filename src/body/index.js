@@ -34,9 +34,10 @@ class Body extends Component {
   render() {
     const { waytoGo, targetFloor } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const isMobile = window.innerWidth <= 768 // Check window's width
     return (
       <div className="body">
-        <Elevator targetFloor={targetFloor} />
+        {!isMobile && <Elevator targetFloor={targetFloor} />}
         <div className="keypad-container">
           <div className="keypad">
             <div className="screen">

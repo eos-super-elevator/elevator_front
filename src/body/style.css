@@ -188,3 +188,44 @@ li svg {
 .door.isOpening {
   width: 5%;
 }
+
+@media only screen and (max-width: 768px) {
+  .body {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+  .keypad-container {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  .keypad {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border: none;
+  }
+  .keypad .screen {
+    flex-basis: 50%;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .keyboard {
+    flex-basis: 50%;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  .keys {
+    margin: 0;
+  }
+}
