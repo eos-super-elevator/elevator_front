@@ -8,7 +8,6 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = { 
-      currentFloor: 0,
       elevatorPosition: 0,
       doorsIsOpened: true
     }
@@ -17,56 +16,56 @@ class Elevator extends Component {
     this.rightDoor = createRef()
   }
 
-  moveElevator = (e) => {
-    const { currentFloor } = this.state
-    const targetFloor = e.target.value
-    const doorsPosition = this.doors.current.offsetTop
-    
-    const node = ReactDOM.findDOMNode(this)
-    const allFloors = document.querySelectorAll('.arrow')
-    const arrowUpNode = node.querySelector(`.arrow-up-${targetFloor}`)
-    const arrowDownNode = node.querySelector(`.arrow-down-${targetFloor}`)
-    
-    allFloors.forEach(floor => {
-      floor.classList.remove('active')
-    })
+  componentDidUpdate(prevProps) {
+    const { targetFloor } = this.props
+    const prevFloor = prevProps.targetFloor
 
-    if (currentFloor < targetFloor ) {
-      const doorsTopPosition = doorsPosition - (targetFloor * 60)
-      const newDoorsPosition = doorsPosition - doorsTopPosition
-      this.setState({ 
-        currentFloor: targetFloor, 
-        elevatorPosition: newDoorsPosition,
-        doorsIsOpened: false
+    if (targetFloor !== prevFloor) {
+      const doorsPosition = this.doors.current.offsetTop
+      const node = ReactDOM.findDOMNode(this)
+      const allFloors = document.querySelectorAll('.arrow')
+      const arrowUpNode = node.querySelector(`.arrow-up-${targetFloor}`)
+      const arrowDownNode = node.querySelector(`.arrow-down-${targetFloor}`)
+      
+      allFloors.forEach(floor => {
+        floor.classList.remove('active')
       })
-      arrowUpNode.classList.add('active')
-      setTimeout(() => {
+    
+      if (prevFloor < targetFloor ) {
+        const doorsTopPosition = doorsPosition - (targetFloor * 60)
+        const newDoorsPosition = doorsPosition - doorsTopPosition
         this.setState({ 
-          doorsIsOpened: true
+          elevatorPosition: newDoorsPosition,
+          doorsIsOpened: false
         })
-        allFloors.forEach(floor => {
-          floor.classList.remove('active')
-        })
-      }, 3000) //Change the state when the animation is ended
-    } else if (currentFloor > targetFloor) {
-      const doorsTopPosition = doorsPosition + (targetFloor * 60)
-      const newDoorsPosition = doorsTopPosition - doorsPosition
-      this.setState({ 
-        currentFloor: targetFloor, 
-        elevatorPosition: newDoorsPosition,
-        doorsIsOpened: false
-      })
-      arrowDownNode.classList.add('active')
-      setTimeout(() => {
+        arrowUpNode.classList.add('active')
+        setTimeout(() => {
+          this.setState({ 
+            doorsIsOpened: true
+          })
+          allFloors.forEach(floor => {
+            floor.classList.remove('active')
+          })
+        }, 3000) //Change the state when the animation is ended
+      } else if (prevFloor > targetFloor) {
+        const doorsTopPosition = doorsPosition + (targetFloor * 60)
+        const newDoorsPosition = doorsTopPosition - doorsPosition
         this.setState({ 
-          doorsIsOpened: true
+          elevatorPosition: newDoorsPosition,
+          doorsIsOpened: false
         })
-        allFloors.forEach(floor => {
-          floor.classList.remove('active')
-        })
-      }, 3000)
-    } else {
-      this.setState({ currentFloor: targetFloor })
+        arrowDownNode.classList.add('active')
+        setTimeout(() => {
+          this.setState({ 
+            doorsIsOpened: true
+          })
+            allFloors.forEach(floor => {
+              floor.classList.remove('active')
+            })
+          }, 3000)
+      } else {
+        console.log('error')
+      }
     }
   }
 
@@ -75,11 +74,6 @@ class Elevator extends Component {
     const { elevatorPosition, doorsIsOpened } = this.state
     return (
       <div className="elevator-container">
-        <div>
-          {floors.map((floor, index) =>
-            <input type="submit" key={index} onClick={this.moveElevator} value={floor} />
-          )}
-        </div>
         <div className="elevator">
           <div className="left">
             {reverse(floors.map((floor, index) => 
