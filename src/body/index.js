@@ -15,7 +15,10 @@ class Body extends Component {
         lastFloor : null,
         isGoingUp : false,
         isGoingDown: false,
-        meter: 0
+        meter: 0,
+        isLocked: false,
+        doorsIsOpened: true,
+        canMoving: false
     }
   }
 
@@ -29,6 +32,8 @@ class Body extends Component {
     })
     const targetKey = node.querySelector(`.key-${targetFloor}`)
     targetKey.classList.add('active')
+
+    this.closeDoors()
 
     this.setState({ targetFloor })
     if ((lastFloor > targetFloor) || (lastFloor < targetFloor) || (lastFloor == null) ) {
@@ -53,14 +58,42 @@ class Body extends Component {
     clearTimeout()
   }
 
+  onLock = () => {
+    const { isLocked } = this.state
+    this.setState({ isLocked: !isLocked })
+  }
+
+  openDoors = () => {
+    console.log('Ouverture des portes')
+    this.setState({ doorsIsOpened: true, canMoving: false  })
+  }
+
+  closeDoors = () => {
+    console.log('Fermeture des portes')
+    this.setState({ doorsIsOpened: false })
+    setTimeout(() => {
+      this.setState({ canMoving: true })
+    }, 3000)
+  }
+
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsIsOpened, canMoving } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
     return (
       <div className="body">
-        {!isMobile && <Elevator targetFloor={targetFloor} />}
+        {!isMobile && 
+          <Elevator 
+            targetFloor={targetFloor} 
+            isLocked={isLocked} 
+            doorsIsOpened={doorsIsOpened}
+            canMoving={canMoving}
+            openDoors={this.openDoors}
+            closeDoors={this.closeDoors}
+          />
+        }
         <div className="keypad-container">
+          <button onClick={this.openDoors}>Ouvrir</button><button onClick={this.closeDoors}>Fermer</button>
           <div className="keypad">
             <div className="screen">
                 <div className="numberEmp">{targetFloor}</div>
@@ -83,7 +116,7 @@ class Body extends Component {
                       {number}
                   </li>
                 ))}
-                <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
+                <li className={`key faKey ${isLocked ? 'locked' : ''}`}  onClick={this.onLock}><FontAwesomeIcon icon={faKey}/></li>
               </ol>
             </div>
           </div>

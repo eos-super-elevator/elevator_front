@@ -8,8 +8,7 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = { 
-      elevatorPosition: 0,
-      doorsIsOpened: true
+      elevatorPosition: 0
     }
     this.doors = createRef()
     this.leftDoor = createRef()
@@ -17,9 +16,9 @@ class Elevator extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { targetFloor } = this.props
+    const { targetFloor, isLocked, openDoors, canMoving } = this.props
     const prevFloor = prevProps.targetFloor
-
+    console.log('canMoving', canMoving)
     if (targetFloor !== prevFloor) {
       const doorsPosition = this.doors.current.offsetTop
       const node = ReactDOM.findDOMNode(this)
@@ -36,13 +35,10 @@ class Elevator extends Component {
         const newDoorsPosition = doorsPosition - doorsTopPosition
         this.setState({ 
           elevatorPosition: newDoorsPosition,
-          doorsIsOpened: false
         })
         arrowUpNode.classList.add('active')
         setTimeout(() => {
-          this.setState({ 
-            doorsIsOpened: true
-          })
+          openDoors()
           allFloors.forEach(floor => {
             floor.classList.remove('active')
           })
@@ -52,16 +48,13 @@ class Elevator extends Component {
         const newDoorsPosition = doorsTopPosition - doorsPosition
         this.setState({ 
           elevatorPosition: newDoorsPosition,
-          doorsIsOpened: false
         })
         arrowDownNode.classList.add('active')
         setTimeout(() => {
-          this.setState({ 
-            doorsIsOpened: true
+          openDoors()
+          allFloors.forEach(floor => {
+            floor.classList.remove('active')
           })
-            allFloors.forEach(floor => {
-              floor.classList.remove('active')
-            })
           }, 3000)
       } else {
         console.log('error')
@@ -75,7 +68,8 @@ class Elevator extends Component {
 
   render() {
     const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    const { elevatorPosition, doorsIsOpened } = this.state
+    const { elevatorPosition } = this.state
+    const { doorsIsOpened } = this.props
     return (
       <div className="elevator-container">
         <div className="elevator">
@@ -95,8 +89,8 @@ class Elevator extends Component {
                 ))}
               </div>
               <div ref={this.doors} className="doors isMoving" style={{ bottom: elevatorPosition}}>
-                  <div className={`door left-door ${doorsIsOpened ? 'isOpening' : ''}`}></div>
-                  <div className={`door right-door ${doorsIsOpened ? 'isOpening' : ''}`}></div>
+                  <div className={`door left-door ${doorsIsOpened ? 'isOpening' : 'isClosing'}`}></div>
+                  <div className={`door right-door ${doorsIsOpened ? 'isOpening' : 'isClosing'}`}></div>
               </div>
           </div>
           <div className="right">
