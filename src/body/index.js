@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import {faArrowDown, faArrowUp, faKey} from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import ReactDOM from 'react-dom'
+import {faArrowDown, faArrowUp, faKey} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import  reverse from 'lodash/reverse'
 
 import Elevator from './elevator'
@@ -12,27 +13,48 @@ class Body extends Component {
     this.state = {
         targetFloor : null,
         lastFloor : null,
-        waytoGo: null
+        isGoingUp : false,
+        isGoingDown: false,
+        meter: 0
     }
   }
 
   checkFloor = (targetFloor) => {
     const { lastFloor } = this.state
+    const node = ReactDOM.findDOMNode(this)
+    const allNumbKeys = document.querySelectorAll('.numbKey')
+
+    allNumbKeys.forEach(numbKey => {
+      numbKey.classList.remove('active')
+    })
+    const targetKey = node.querySelector(`.key-${targetFloor}`)
+    targetKey.classList.add('active')
+
     this.setState({ targetFloor })
     if ((lastFloor > targetFloor) || (lastFloor < targetFloor) || (lastFloor == null) ) {
       if (lastFloor > targetFloor) {
-        this.setState({ waytoGo: 1 })
+        this.setState({ isGoingDown: true, isGoingUp: false })
+        setTimeout(() => {
+          this.setState({ isGoingDown : false })
+        }, 3500)
       } else if (lastFloor < targetFloor) {
-        this.setState({ waytoGo: 2 })
+        this.setState({ isGoingUp: true, isGoingDown: false })
+        setTimeout(() => {
+          this.setState({ isGoingUp: false })
+        }, 3500)
       }
       this.setState({ lastFloor: targetFloor })
     } else {
-      this.setState({ waytoGo: 3 })
+      this.setState({ isGoingUp: false, isGoingDown: false })
     }
   }
 
+  componentWillUnmount() {
+    clearTimeout()
+  }
+
   render() {
-    const { waytoGo, targetFloor } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
     return (
@@ -45,19 +67,19 @@ class Body extends Component {
                 <div className="test">
                 <div className="arrow">
                   <span>
-                    {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
-                    {waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
+                    {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
+                    {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
                   </span>
                 </div>
                 <div className="ElevatorRange">
-                  30m
+                  {meter}m
                 </div>
                 </div>
             </div>
             <div className="keyboard">
               <ol className="keys">
                 {reverse(numbers.map((number) =>
-                  <li className="key" onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
+                  <li className={`key key-${number} numbKey`} onClick={this.checkFloor.bind(this,number)} key={number}>
                       {number}
                   </li>
                 ))}

@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react'
-import ReactDOM from "react-dom"
+import ReactDOM from 'react-dom'
 import reverse from 'lodash/reverse'
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
 import './style.css'
@@ -67,6 +67,10 @@ class Elevator extends Component {
         console.log('error')
       }
     }
+  }
+
+  componentWillUnmount() {
+    clearTimeout()
   }
 
   render() {
