@@ -4,24 +4,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import  reverse from 'lodash/reverse'
 import './style.css'
 
+
+
 class Keypad extends Component{
 
     constructor(props){
         super (props);
         this.state = {
-            floor : null,
+            floor : 0,
             lastFloor : 0,
             waytoGo: null,
             currentHeight: 0
         };
     }
 
+    componentWillUnmount() {
+        clearTimeout();
+    }
+    componentDidUpdate(prevState) {
+        // if(prevState.currentHeight !== this.state.currentHeight){
+        //     if ()
+        // }
+    }
 
     checkFloor = (floor) => {
-        this.setState({
-            floor
-        });
-        
+
+
+
         if ((this.state.lastFloor > floor) || (this.state.lastFloor < floor) || (this.state.lastFloor == null) ){
 
             if (this.state.lastFloor > floor) {
@@ -48,26 +57,41 @@ class Keypad extends Component{
     * -
     * */
 
-    decrementer = (timeTravel, startTravel ) => {
-        console.log('time travel :'+ timeTravel + 'start travel : ' +startTravel)
-        // setTimeout( function () {
-        //     for (let i = 0; timeTravel > i; i++)
-        //     {
-        //         if (startTravel < timeTravel) {
-        //             startTravel++;
-        //             console.log(startTravel);
-        //
-        //         }
-        //     }
-        // }, 10000);
-            if ( startTravel < timeTravel ) {
-                startTravel++ ;
-                const id = setInterval(this.decrementer(timeTravel,startTravel), 1000);
-                return () => clearInterval(id);
+    decrementer = (timeTravel, startTravel,current_height,Destination ) => {
+
+        let timerRun = setInterval(() => {
+            startTravel++ ;
+            console.log('Temps de voyage :'+ timeTravel + ' temps actuel de voyage : ' +startTravel)
+        }, 1000);
+        let timerRun2 = setInterval(() => {
+            console.log('mètre actuel : '+this.state.currentHeight);
+            if (current_height < Destination){
+                this.setState({
+                    currentHeight : current_height++
+                })
+
+            } else{
+                this.setState({
+                    currentHeight : current_height--
+                })
+
             }
+        }, 750);
 
+        let timerUpdater = setInterval(() => {
 
+        })
+
+        setTimeout(()=>{
+            clearInterval(timerRun);
+        },timeTravel*1000);
+
+        setTimeout(()=>{
+            clearInterval(timerRun2);
+            clearInterval(timerUpdater)
+        },timeTravel*1000);
     }
+
     checkHeight = (floor, lastFloor) => {
         const heightStart = 4 * lastFloor;
         const heightEnd = 4 * floor;
@@ -85,7 +109,8 @@ class Keypad extends Component{
             console.log("Distance à parcourir " + travelingHeight);
             let timeTravel = travelingHeight * (3/4);
             console.log('time travel '+ timeTravel)
-            setTimeout(this.decrementer(timeTravel,0), 1000);
+            this.decrementer(timeTravel,0,heightStart,heightEnd)
+
         }else{
             //Descendre
             console.log('Etage cible :'+ floor);
@@ -96,61 +121,16 @@ class Keypad extends Component{
             travelingHeight = heightStart- heightEnd;
             console.log("Distance à parcourir " + travelingHeight);
             let timeTravel = travelingHeight * (3/4);
-            let startTravel = 0;
-            setTimeout(this.decrementer(timeTravel,startTravel), 1000);
+            this.decrementer(timeTravel,0,heightStart,heightEnd)
         }
-
     }
 
 
 
     render() {
-        const {waytoGo,floor} = this.state
+        const {currentHeight,waytoGo,floor} = this.state
         const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-        return (
-            <div className="keypad-container">
-                <div className="keypad">
-                    <div className="screen">
-                        <div className="numberEmp">{floor}</div>
-                        <div className="arrow">
-                            <span>
-                                {waytoGo === 3 && <FontAwesomeIcon icon={faAtom} />}
-                                {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
-                                {waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
-                            </span>
-                        </div>
-                        <div className="ElevatorRange">
-                            {} Mètre
-                        </div>
-
-                    </div>
-                    <div id="keyboard">
-                        <ol className="keys">
-                            { reverse(numbers.map((number) =>
-                                <li onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
-                                    {number}
-                                </li>
-                            ))
-                            }
-                            <li><FontAwesomeIcon icon={faKey} /></li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-
-}
-
-
-export default Keypad
-
-    render() {
-        const {waytoGo,floor} = this.state
-        const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
+        console.log(currentHeight);
         return (
             <div className="keypad-container">
                 <div className="keypad">
@@ -164,7 +144,7 @@ export default Keypad
                             </span>
                         </div>
                         <div className="ElevatorRange">
-                            30m
+                            {currentHeight}m
                         </div>
                         </div>
                     </div>
@@ -184,3 +164,5 @@ export default Keypad
         )
     }
 }
+
+export default Keypad
