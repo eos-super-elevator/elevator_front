@@ -133,17 +133,6 @@ class Keypad extends Component{
                                 </li>
                             ))
                             }
-                            {/*<li onClick={this.checkFloor.bind(this,1)}>1</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,2)}>2</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,3)}>3</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,4)}>4</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,5)}>5</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,6)}>6</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,7)}>7</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,8)}>8</li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,9)}>9</li>*/}
-                            {/*<li></li>*/}
-                            {/*<li onClick={this.checkFloor.bind(this,0)}>RDC</li>*/}
                             <li><FontAwesomeIcon icon={faKey} /></li>
                         </ol>
                     </div>
@@ -157,3 +146,41 @@ class Keypad extends Component{
 
 
 export default Keypad
+
+    render() {
+        const {waytoGo,floor} = this.state
+        const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        return (
+            <div className="keypad-container">
+                <div className="keypad">
+                    <div className="screen">
+                        <div className="numberEmp">{floor}</div>
+                        <div className="test">
+                        <div className="arrow">
+                            <span>
+                                {waytoGo === 2 && <FontAwesomeIcon icon={faArrowUp} />}
+                                {waytoGo === 1 && <FontAwesomeIcon icon={faArrowDown} />}
+                            </span>
+                        </div>
+                        <div className="ElevatorRange">
+                            30m
+                        </div>
+                        </div>
+                    </div>
+                    <div className="keyboard">
+                        <ol className="keys">
+                            { reverse(numbers.map((number) =>
+                                <li className="key" onClick={this.checkFloor.bind(this,number)} key={number.toString()}>
+                                    {number}
+                                </li>
+                                ))
+                            }
+                            <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
