@@ -67,13 +67,15 @@ class Keypad extends Component{
             console.log('mètre actuel : '+this.state.currentHeight);
             if (current_height < Destination){
                 this.setState({
-                    currentHeight : current_height++
+                    currentHeight : current_height++,
                 })
 
-            } else{
+            } else if(current_height > Destination){
                 this.setState({
-                    currentHeight : current_height--
+                    currentHeight : current_height--,
                 })
+
+            }else{
 
             }
         }, 750);
@@ -84,7 +86,7 @@ class Keypad extends Component{
 
         setTimeout(()=>{
             clearInterval(timerRun);
-        },timeTravel*1000);
+        },timeTravel*1000+200);
 
         setTimeout(()=>{
             clearInterval(timerRun2);
@@ -165,4 +167,4 @@ class Keypad extends Component{
     }
 }
 
-export default Keypad
+// export default Keypad
