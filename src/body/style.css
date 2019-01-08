@@ -39,9 +39,9 @@
   background-color: white;
   margin-left: 5px;
   margin-bottom: 5px;
-}
-.keys .key:hover {
   cursor: pointer;
+}
+.numbKey:hover {
   background-color: #23cbff;
 }
 .key:active {
@@ -49,7 +49,7 @@
 }
 
 .key.active {
-  box-shadow: 0px 0px 18px 4px rgba(17,192,245,1);
+  box-shadow: 0px 0px 18px 3px rgba(17,192,245,1);
   background-color: #23cbff;
   border: 2px solid #23cbff;
 }
@@ -90,7 +90,15 @@
 .faKey {
   padding-right: 105px;
 }
-li svg {
+.faKey:hover {
+  background-color: #F78181;
+}
+.key.faKey.locked {
+  background-color: #F78181;
+  border: 1px solid #F78181;
+  box-shadow: 0px 0px 18px 3px rgba(247,129,129,1);
+}
+.faKey svg {
   margin-left: 83px;
   font-size: 42px !important;
 }
@@ -178,15 +186,38 @@ li svg {
   margin-right: 10px;
   border-left: 1px solid black;
 }
-.doors.isMoving, .door.isOpening {
+.doors.isMoving, .door.isOpened, .door.isClosed {
   -webkit-transition: 3s;
   -moz-transition: 3s;
   -ms-transition: 3s;
   -o-transition: 3s;
   transition: 3s;
 }
-.door.isOpening {
+.door.isOpened {
   width: 5%;
+  animation: opening 3s 0;
+}
+.door.isClosed {
+  width: 100%;
+  animation: opening 3s 0;
+}
+@-webkit-keyframes opening {
+  from { width: 100%; }
+  to { width: 5%; }
+}
+
+@keyframes opening {
+  from { width: 100%; }
+  to { width: 5%; }
+}
+@-webkit-keyframes closing {
+  from { width: 5%; }
+  to { width: 100%; }
+}
+
+@keyframes closing {
+  from { width: 5%; }
+  to { width: 100%; }
 }
 
 @media only screen and (max-width: 768px) {

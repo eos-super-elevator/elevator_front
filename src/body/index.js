@@ -11,11 +11,13 @@ class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
-        targetFloor : null,
-        lastFloor : null,
-        isGoingUp : false,
-        isGoingDown: false,
-        meter: 0
+      targetFloor : null,
+      lastFloor : null,
+      isGoingUp : false,
+      isGoingDown: false,
+      meter: 0,
+      isLocked: false,
+      doorsAreOpening: false
     }
   }
 
@@ -23,11 +25,14 @@ class Body extends Component {
     const { lastFloor } = this.state
     const node = ReactDOM.findDOMNode(this)
     const allNumbKeys = document.querySelectorAll('.numbKey')
+    const targetKey = node.querySelector(`.key-${targetFloor}`)
 
+    // Remove active class for each key (to light off)
     allNumbKeys.forEach(numbKey => {
       numbKey.classList.remove('active')
     })
-    const targetKey = node.querySelector(`.key-${targetFloor}`)
+
+    // Add active class to target key (to light on)
     targetKey.classList.add('active')
 
     this.setState({ targetFloor })
@@ -36,7 +41,7 @@ class Body extends Component {
         this.setState({ isGoingDown: true, isGoingUp: false })
         setTimeout(() => {
           this.setState({ isGoingDown : false })
-        }, 3500)
+        }, 3500) // Remove arrow animation after 3'5s
       } else if (lastFloor < targetFloor) {
         this.setState({ isGoingUp: true, isGoingDown: false })
         setTimeout(() => {
@@ -50,17 +55,39 @@ class Body extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout()
+    this.clearTimeout()
+  }
+
+  onLock = () => {
+    const { isLocked } = this.state
+    this.setState({ isLocked: !isLocked })
+  }
+
+  openDoors = () => {
+    this.setState({ doorsAreOpening: true })
+  }
+
+  closeDoors = () => {
+    this.setState({ doorsAreOpening: false })
   }
 
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
     return (
       <div className="body">
-        {!isMobile && <Elevator targetFloor={targetFloor} />}
+        {!isMobile && 
+          <Elevator 
+            targetFloor={targetFloor} 
+            isLocked={isLocked} 
+            doorsAreOpening={doorsAreOpening}
+            openDoors={this.openDoors}
+            closeDoors={this.closeDoors}
+          />
+        }
         <div className="keypad-container">
+          <button onClick={this.openDoors}>Ouvrir</button><button onClick={this.closeDoors}>Fermer</button>
           <div className="keypad">
             <div className="screen">
                 <div className="numberEmp">{targetFloor}</div>
@@ -83,7 +110,7 @@ class Body extends Component {
                       {number}
                   </li>
                 ))}
-                <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
+                <li className={`key faKey ${isLocked ? 'locked' : ''}`}  onClick={this.onLock}><FontAwesomeIcon icon={faKey}/></li>
               </ol>
             </div>
           </div>
