@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react'
 import ReactDOM from 'react-dom'
-import reverse from 'lodash/reverse'
+import reverse from 'lodash/reverse' // Reverse the order in an array
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
 import './style.css'
 
@@ -16,9 +16,8 @@ class Elevator extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { targetFloor, isLocked, openDoors, canMoving } = this.props
+    const { targetFloor, openDoors, closeDoors } = this.props
     const prevFloor = prevProps.targetFloor
-    console.log('canMoving', canMoving)
     if (targetFloor !== prevFloor) {
       const doorsPosition = this.doors.current.offsetTop
       const node = ReactDOM.findDOMNode(this)
@@ -26,29 +25,40 @@ class Elevator extends Component {
       const arrowUpNode = node.querySelector(`.arrow-up-${targetFloor}`)
       const arrowDownNode = node.querySelector(`.arrow-down-${targetFloor}`)
       
+      // Remove active class for each stage (to light off)
       allFloors.forEach(floor => {
         floor.classList.remove('active')
       })
-    
+
       if (prevFloor < targetFloor ) {
+        // Calc new position of elevator to allow the moving
         const doorsTopPosition = doorsPosition - (targetFloor * 60)
         const newDoorsPosition = doorsPosition - doorsTopPosition
+
+        // Check if the doors are well closed before moving
         this.setState({ 
           elevatorPosition: newDoorsPosition,
         })
+
+        // Add active class to target stage light
         arrowUpNode.classList.add('active')
         setTimeout(() => {
           openDoors()
           allFloors.forEach(floor => {
             floor.classList.remove('active')
           })
-        }, 3000) //Change the state when the animation is ended
+        }, 3000) // This class is removed after 3s (to light off)
+        setTimeout(() => {
+          closeDoors()
+        }, 6000) // Close doors after 6s
+
       } else if (prevFloor > targetFloor) {
         const doorsTopPosition = doorsPosition + (targetFloor * 60)
         const newDoorsPosition = doorsTopPosition - doorsPosition
         this.setState({ 
           elevatorPosition: newDoorsPosition,
         })
+
         arrowDownNode.classList.add('active')
         setTimeout(() => {
           openDoors()
@@ -56,6 +66,9 @@ class Elevator extends Component {
             floor.classList.remove('active')
           })
           }, 3000)
+          setTimeout(() => {
+            closeDoors()
+          }, 6000)
       } else {
         console.log('error')
       }
@@ -63,13 +76,13 @@ class Elevator extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout()
+    this.clearTimeout()
   }
 
   render() {
     const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { elevatorPosition } = this.state
-    const { doorsIsOpened } = this.props
+    const { doorsAreOpening } = this.props
     return (
       <div className="elevator-container">
         <div className="elevator">
@@ -89,8 +102,8 @@ class Elevator extends Component {
                 ))}
               </div>
               <div ref={this.doors} className="doors isMoving" style={{ bottom: elevatorPosition}}>
-                  <div className={`door left-door ${doorsIsOpened ? 'isOpening' : 'isClosing'}`}></div>
-                  <div className={`door right-door ${doorsIsOpened ? 'isOpening' : 'isClosing'}`}></div>
+                  <div className={`door left-door ${doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
+                  <div className={`door right-door ${doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
               </div>
           </div>
           <div className="right">

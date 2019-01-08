@@ -11,14 +11,13 @@ class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
-        targetFloor : null,
-        lastFloor : null,
-        isGoingUp : false,
-        isGoingDown: false,
-        meter: 0,
-        isLocked: false,
-        doorsIsOpened: true,
-        canMoving: false
+      targetFloor : null,
+      lastFloor : null,
+      isGoingUp : false,
+      isGoingDown: false,
+      meter: 0,
+      isLocked: false,
+      doorsAreOpening: false
     }
   }
 
@@ -26,14 +25,15 @@ class Body extends Component {
     const { lastFloor } = this.state
     const node = ReactDOM.findDOMNode(this)
     const allNumbKeys = document.querySelectorAll('.numbKey')
+    const targetKey = node.querySelector(`.key-${targetFloor}`)
 
+    // Remove active class for each key (to light off)
     allNumbKeys.forEach(numbKey => {
       numbKey.classList.remove('active')
     })
-    const targetKey = node.querySelector(`.key-${targetFloor}`)
-    targetKey.classList.add('active')
 
-    this.closeDoors()
+    // Add active class to target key (to light on)
+    targetKey.classList.add('active')
 
     this.setState({ targetFloor })
     if ((lastFloor > targetFloor) || (lastFloor < targetFloor) || (lastFloor == null) ) {
@@ -41,7 +41,7 @@ class Body extends Component {
         this.setState({ isGoingDown: true, isGoingUp: false })
         setTimeout(() => {
           this.setState({ isGoingDown : false })
-        }, 3500)
+        }, 3500) // Remove arrow animation after 3'5s
       } else if (lastFloor < targetFloor) {
         this.setState({ isGoingUp: true, isGoingDown: false })
         setTimeout(() => {
@@ -55,7 +55,7 @@ class Body extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout()
+    this.clearTimeout()
   }
 
   onLock = () => {
@@ -64,20 +64,15 @@ class Body extends Component {
   }
 
   openDoors = () => {
-    console.log('Ouverture des portes')
-    this.setState({ doorsIsOpened: true, canMoving: false  })
+    this.setState({ doorsAreOpening: true })
   }
 
   closeDoors = () => {
-    console.log('Fermeture des portes')
-    this.setState({ doorsIsOpened: false })
-    setTimeout(() => {
-      this.setState({ canMoving: true })
-    }, 3000)
+    this.setState({ doorsAreOpening: false })
   }
 
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsIsOpened, canMoving } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
     return (
@@ -86,8 +81,7 @@ class Body extends Component {
           <Elevator 
             targetFloor={targetFloor} 
             isLocked={isLocked} 
-            doorsIsOpened={doorsIsOpened}
-            canMoving={canMoving}
+            doorsAreOpening={doorsAreOpening}
             openDoors={this.openDoors}
             closeDoors={this.closeDoors}
           />
