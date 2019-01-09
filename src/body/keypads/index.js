@@ -101,27 +101,21 @@ class Keypad extends Component{
         let floorVisited = 0;
         if(floor > lastFloor){
             //Monter
-            console.log('Etage cible :'+ floor);
-            console.log('Etage de départ : ' + lastFloor);
-            console.log('Hauteur de départ ' + heightStart);
-            console.log("Hauteur de d'arrivé " + heightEnd);
-            floorVisited = floor - lastFloor;
-            console.log("nombre d'étage à parcourir :"+ floorVisited);
+            // floorVisited = floor - lastFloor;
             travelingHeight = heightEnd - heightStart;
-            console.log("Distance à parcourir " + travelingHeight);
             let timeTravel = travelingHeight * (3/4);
-            console.log('time travel '+ timeTravel)
             this.decrementer(timeTravel,0,heightStart,heightEnd)
 
         }else{
             //Descendre
-            console.log('Etage cible :'+ floor);
-            console.log('Etage de départ : ' + lastFloor);
-            console.log('Hauteur de départ ' + heightStart);
-            console.log("Hauteur de d'arrivé " + heightEnd);
-            console.log("nombre d'étage à parcourir :"+ floorVisited);
+            // console.log('Etage cible :'+ floor);
+            // console.log('Etage de départ : ' + lastFloor);
+            // console.log('Hauteur de départ ' + heightStart);
+            // console.log("Hauteur de d'arrivé " + heightEnd);
+            // console.log("nombre d'étage à parcourir :"+ floorVisited);
+            // floorVisited = floor - lastFloor;
             travelingHeight = heightStart- heightEnd;
-            console.log("Distance à parcourir " + travelingHeight);
+            // console.log("Distance à parcourir " + travelingHeight);
             let timeTravel = travelingHeight * (3/4);
             this.decrementer(timeTravel,0,heightStart,heightEnd)
         }
