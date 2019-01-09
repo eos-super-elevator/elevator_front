@@ -11,13 +11,12 @@ class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
-      targetFloor : null,
-      lastFloor : null,
-      isGoingUp : false,
-      isGoingDown: false,
-      meter: 0,
-      isLocked: false,
-      doorsAreOpening: false
+        targetFloor : null,
+        lastFloor : null,
+        isGoingUp : false,
+        isGoingDown: false,
+        meter: 0,
+        timetravel : 0
     }
   }
 
@@ -53,7 +52,7 @@ class Body extends Component {
     }
   }
 
-  /*
+    /*
       * Tableau avec chaque étage ainsi que sa hauteur en mètres (1,33 m par seconde de vitesse de montée)
       * En fonction de l'étage selectionné et de l'étage de départ faire le calcul correspondant
       * variable :
@@ -63,106 +62,97 @@ class Body extends Component {
       * -
       * */
 
-  decrementer = (timeTravel, startTravel,current_height,Destination ) => {
+    decrementer = (timeTravel, startTravel,current_height,Destination ) => {
 
-    let timerRun = setInterval(() => {
-      // console.log('hello')
-      // console.log('mètre actuel : '+this.state.meter);
-      startTravel++ ;
-    }, 1000);
-    let timerRun2 = setInterval(() => {
-      if (current_height < Destination){
-        this.setState({
-          meter : ++current_height
-        })
+        let timerRun = setInterval(() => {
+            console.log('hello')
+            console.log('mètre actuel : '+this.state.meter);
+            startTravel++ ;
+            // if (current_height <= Destination){
+            //     this.setState({
+            //         meter : current_height++
+            //     })
+            //     console.log('upsy : '+ this.state.meter)
+            //
+            // } else if(current_height >= Destination){
+            //     this.setState({
+            //         meter : current_height--
+            //     })
+            //     console.log('daisy: '+  this.state.meter)
+            //
+            // }
+        }, 1000);
+        let timerRun2 = setInterval(() => {
+            if (current_height < Destination){
+                this.setState({
+                    meter : ++current_height
+                })
 
-      } else if(current_height > Destination) {
-        this.setState({
-          meter : --current_height
-        })
+            } else if(current_height > Destination) {
+                this.setState({
+                    meter : --current_height
+                })
 
-      }else{
-      }
-    }, 250);
+            }else{
+            }
+        }, 250);
 
-    setTimeout(()=>{
-      clearInterval(timerRun);
-    },timeTravel*1000);
+        // let timerUpdater = setInter
 
-    setTimeout(()=>{
-      clearInterval(timerRun2);
-      // clearInterval(timerUpdater)
-    },timeTravel*1000+200);
-  }
+        setTimeout(()=>{
+            clearInterval(timerRun);
+        },timeTravel*1000);
 
-  checkHeight = (floor, lastFloor) => {
-    const heightStart = 4 * lastFloor;
-    const heightEnd = 4 * floor;
-    let travelingHeight = 0;
-    let floorVisited = 0;
-    if(floor > lastFloor){
-      //Monter
-      floorVisited = floor - lastFloor;
-      // console.log("nombre d'étage à parcourir :"+ floorVisited);
-      travelingHeight = heightEnd - heightStart;
-      // console.log("Distance à parcourir " + travelingHeight);
-      let timeTravel = travelingHeight * (3/4);
-      this.setState({
-
-      })
-      // console.log('time travel '+ timeTravel)
-      this.decrementer(timeTravel,0,heightStart,heightEnd)
-
-    }else{
-      //Descendre
-      // console.log('Etage cible :'+ floor);
-      // console.log('Etage de départ : ' + lastFloor);
-      // console.log('Hauteur de départ ' + heightStart);
-      // console.log("Hauteur de d'arrivé " + heightEnd);
-      // console.log("nombre d'étage à parcourir :"+ floorVisited);
-      travelingHeight = heightStart- heightEnd;
-      // console.log("Distance à parcourir " + travelingHeight);
-      let timeTravel = travelingHeight * (3/4);
-      this.decrementer(timeTravel,0,heightStart,heightEnd)
+        setTimeout(()=>{
+            clearInterval(timerRun2);
+            // clearInterval(timerUpdater)
+        },timeTravel*1000+200);
     }
-  }
 
+    checkHeight = (floor, lastFloor) => {
+        const heightStart = 4 * lastFloor;
+        const heightEnd = 4 * floor;
+        let travelingHeight = 0;
+        let floorVisited = 0;
+        if(floor > lastFloor){
+            //Monter
+            floorVisited = floor - lastFloor;
+            // console.log("nombre d'étage à parcourir :"+ floorVisited);
+            travelingHeight = heightEnd - heightStart;
+            // console.log("Distance à parcourir " + travelingHeight);
+            let timeTravel = travelingHeight * (3/4);
+            this.setState({
+
+            })
+            // console.log('time travel '+ timeTravel)
+            this.decrementer(timeTravel,0,heightStart,heightEnd)
+
+        }else{
+            //Descendre
+            // console.log('Etage cible :'+ floor);
+            // console.log('Etage de départ : ' + lastFloor);
+            // console.log('Hauteur de départ ' + heightStart);
+            // console.log("Hauteur de d'arrivé " + heightEnd);
+            // console.log("nombre d'étage à parcourir :"+ floorVisited);
+            travelingHeight = heightStart- heightEnd;
+            // console.log("Distance à parcourir " + travelingHeight);
+            let timeTravel = travelingHeight * (3/4);
+            this.decrementer(timeTravel,0,heightStart,heightEnd)
+        }
+    }
 
   componentWillUnmount() {
-    this.clearTimeout()
-  }
-
-  onLock = () => {
-    const { isLocked } = this.state
-    this.setState({ isLocked: !isLocked })
-  }
-
-  openDoors = () => {
-    this.setState({ doorsAreOpening: true })
-  }
-
-  closeDoors = () => {
-    this.setState({ doorsAreOpening: false })
+    clearTimeout()
   }
 
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
-    
     return (
       <div className="body">
-        {!isMobile && 
-          <Elevator 
-            targetFloor={targetFloor} 
-            isLocked={isLocked} 
-            doorsAreOpening={doorsAreOpening}
-            openDoors={this.openDoors}
-            closeDoors={this.closeDoors}
-          />
-        }
+        {!isMobile && <Elevator targetFloor={targetFloor} />}
         <div className="keypad-container">
-          <button onClick={this.openDoors}>Ouvrir</button><button onClick={this.closeDoors}>Fermer</button>
           <div className="keypad">
             <div className="screen">
                 <div className="numberEmp">{targetFloor}</div>
@@ -185,7 +175,7 @@ class Body extends Component {
                       {number}
                   </li>
                 ))}
-                <li className={`key faKey ${isLocked ? 'locked' : ''}`}  onClick={this.onLock}><FontAwesomeIcon icon={faKey}/></li>
+                <li className="key faKey"><FontAwesomeIcon icon={faKey} /></li>
               </ol>
             </div>
           </div>
