@@ -75,6 +75,7 @@ class Body extends Component {
     const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
+    
     return (
       <div className="body">
         {!isMobile && 
