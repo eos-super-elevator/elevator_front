@@ -18,10 +18,8 @@ class Door extends Component {
   // connect on `new_elevator_state` socket and listen changes
   connectSocket() {
     const socket = socketIOClient(ENDPOINT)
-    // const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
-      // console.log(data)
       let open = data.doors.status !== "closed"
       this.setState({open: open})
     })
@@ -38,7 +36,6 @@ class Door extends Component {
       </div>
     )
   }
-
 }
 
 export default Door

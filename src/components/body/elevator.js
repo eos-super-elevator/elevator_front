@@ -29,24 +29,8 @@ class Elevator extends Component {
 
     if (prevFloor < targetFloor ) {
       this.displayArrow('up')
-      // setTimeout(() => {
-      //   openDoors()
-      //   allFloors
-      // }, 3000) // This class is removed after 3s (to light off)
-      // setTimeout(() => {
-      //   closeDoors()
-      // }, 6000) // Close doors after 6s
     } else if (prevFloor > targetFloor) {
       this.displayArrow('down')
-      // setTimeout(() => {
-      //   openDoors()
-      //   allFloors.forEach(floor => {
-      //     floor.classList.remove('active')
-      //   })
-      //   }, 3000)
-      //   setTimeout(() => {
-      //     closeDoors()
-      //   }, 6000)
     } else {
       console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
     }
@@ -66,12 +50,11 @@ class Elevator extends Component {
     const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
-      // console.log('Receive data from `new_elevator_state` socket')
       thus.setFloor(data.elevator.floor)
     })
   }
 
-  // - display arrow on the current floor
+  // display arrow on the current floor
   displayArrow(direction){
     this.turnOffArrows()
     const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
@@ -79,10 +62,6 @@ class Elevator extends Component {
     if(arrow !== null){
       arrow.classList.add('active')
     }
-  }
-
-  getNode() {
-    return ReactDOM.findDOMNode(this)
   }
 
   turnOffArrows(){
@@ -101,7 +80,6 @@ class Elevator extends Component {
     const floorInt = Math.round(floor)
     // render only if needed
     if (floorInt !== this.getCurrentFloor()) {
-      // console.log("Change elevator position:" + floorInt)
       this.setState({ elevatorPosition: floorInt })
     }
   }
@@ -109,8 +87,6 @@ class Elevator extends Component {
   render() {
     const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { elevatorPosition } = this.state
-
-    console.log("elevator position in elevator: " + elevatorPosition)
 
     return (
       <div className="elevator-container">
