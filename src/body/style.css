@@ -88,14 +88,15 @@
   margin: auto;
 }
 .faKey {
-  padding-right: 105px;
+  padding-right: 0px;
 }
 li svg {
-  margin-left: 83px;
+  margin-left: 3px;
   font-size: 42px !important;
 }
 .keypad .arrow {
-  font-size: 50px;
+  font-size: 34px;
+  margin-top: 10px;
   animation: blinker 2s linear infinite;
 }
 @keyframes blinker {
@@ -227,5 +228,22 @@ li svg {
   }
   .keys {
     margin: 0;
+  }
+}
+/* Mode mobile */
+.MobileView {
+  display: flex;
+  flex-direction: column;
+  font-size: 40px;
+}
+.MobileView .arrow {
+  font-size: 30px;
+  margin-left: 20px;
+}
+@media screen and (max-width: 580px)
+{
+  .ElevatorRange{
+      font-size: 30px;
+      margin: auto;
   }
 }
