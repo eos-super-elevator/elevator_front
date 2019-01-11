@@ -7,7 +7,11 @@ import  reverse from 'lodash/reverse'
 import Elevator from './elevator'
 import './style.css'
 
-class Body extends Component { 
+import { ENDPOINT } from '../../config'
+
+const axios = require('axios')
+
+class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
@@ -137,6 +141,18 @@ class Body extends Component {
     this.setState({ isLocked: !isLocked })
   }
 
+  requestFloor = (number) => {
+    const url = `${ENDPOINT}/floor/${number}`
+
+
+
+    console.log(`Try to request ${url}`)
+
+    axios.get(url)
+      .then((resp) => console.log(`Requested: ${url}`))
+      .catch((error) => console.error(error))
+  }
+
   openDoors = () => {
     this.setState({ doorsAreOpening: true })
   }
@@ -149,13 +165,13 @@ class Body extends Component {
     const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
-    
+
     return (
       <div className="body">
-        {!isMobile && 
-          <Elevator 
-            targetFloor={targetFloor} 
-            isLocked={isLocked} 
+        {!isMobile &&
+          <Elevator
+            targetFloor={targetFloor}
+            isLocked={isLocked}
             doorsAreOpening={doorsAreOpening}
             openDoors={this.openDoors}
             closeDoors={this.closeDoors}
@@ -181,7 +197,7 @@ class Body extends Component {
             <div className="keyboard">
               <ol className="keys">
                 {reverse(numbers.map((number) =>
-                  <li className={`key key-${number} numbKey`} onClick={this.checkFloor.bind(this,number)} key={number}>
+                  <li className={`key key-${number} numbKey`} onClick={this.requestFloor.bind(this, number)} key={number}>
                       {number}
                   </li>
                 ))}

@@ -21,6 +21,7 @@ class Door extends Component {
     // const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
+      // console.log(data)
       let open = data.doors.status !== "closed"
       this.setState({open: open})
     })
@@ -29,8 +30,6 @@ class Door extends Component {
   render (){
     const { open } = this.state
     const { elevatorPosition } = this.props
-
-    console.log("elevator position in door: " + elevatorPosition)
 
     return (
       <div className="doors isMoving" style={{ bottom: elevatorPosition * 60}}>
