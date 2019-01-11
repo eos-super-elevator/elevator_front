@@ -4,6 +4,7 @@ import socketIOClient from 'socket.io-client'
 import reverse from 'lodash/reverse' // Reverse the order in an array
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
 import './style.css'
+import Door from './door'
 
 import { ENDPOINT } from '../../config'
 
@@ -21,9 +22,6 @@ class Elevator extends Component {
   componentDidUpdate(prevProps) {
     let prevFloor = prevProps.elevatorPosition
     let targetFloor = this.getCurrentFloor()
-
-    console.log('componentDidUpdate')
-
 
     if(prevFloor === undefined){
       prevFloor = 0
@@ -68,7 +66,7 @@ class Elevator extends Component {
     const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
-      console.log('Receive data from `new_elevator_state` socket')
+      // console.log('Receive data from `new_elevator_state` socket')
       thus.setFloor(data.elevator.floor)
     })
   }
@@ -76,9 +74,6 @@ class Elevator extends Component {
   // - display arrow on the current floor
   displayArrow(direction){
     this.turnOffArrows()
-
-    console.log(`.arrow-${direction}-${this.getCurrentFloor()}`)
-
     const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
 
     if(arrow !== null){
@@ -114,7 +109,9 @@ class Elevator extends Component {
   render() {
     const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { elevatorPosition } = this.state
-    const { doorsAreOpening } = this.props
+
+    console.log("elevator position in elevator: " + elevatorPosition)
+
     return (
       <div className="elevator-container">
         <div className="elevator">
@@ -133,10 +130,7 @@ class Elevator extends Component {
                   </div>
                 ))}
               </div>
-              <div ref={this.doors} className="doors isMoving" style={{ bottom: elevatorPosition}}>
-                  <div className={`door left-door ${doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
-                  <div className={`door right-door ${doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
-              </div>
+              <Door elevatorPosition={elevatorPosition} />
           </div>
           <div className="right">
           {reverse(floors.map((floor, index) =>
