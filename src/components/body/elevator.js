@@ -5,7 +5,7 @@ import reverse from 'lodash/reverse' // Reverse the order in an array
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
 import './style.css'
 
-const ENDPOINT = 'http://192.168.1.144:3000'
+import { ENDPOINT } from '../../config'
 
 class Elevator extends Component {
   constructor(props) {
