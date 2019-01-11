@@ -19,9 +19,9 @@ class Elevator extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let { targetFloor, openDoors, closeDoors } = this.props
-
     let prevFloor = prevProps.elevatorPosition
+    let targetFloor = this.getCurrentFloor()
+
     console.log('componentDidUpdate')
 
 
@@ -29,63 +29,28 @@ class Elevator extends Component {
       prevFloor = 0
     }
 
-    targetFloor = this.getCurrentFloor()
-
-    if (targetFloor !== prevFloor) {
-      const doorsPosition = this.doors.current.offsetTop
-      const node = ReactDOM.findDOMNode(this)
-      const allFloors = document.querySelectorAll('.arrow')
-      const arrowUpNode = node.querySelector(`.arrow-up-${targetFloor}`)
-      const arrowDownNode = node.querySelector(`.arrow-down-${targetFloor}`)
-
-      // Remove active class for each stage (to light off)
-      allFloors.forEach(floor => {
-        floor.classList.remove('active')
-      })
-
-      if (prevFloor < targetFloor ) {
-        // Calc new position of elevator to allow the moving
-        // const doorsTopPosition = doorsPosition - (targetFloor * 60)
-        // const newDoorsPosition = doorsPosition - doorsTopPosition
-
-        // Check if the doors are well closed before moving
-        // this.setState({
-        //   elevatorPosition: newDoorsPosition,
-        // })
-
-        // Add active class to target stage light
-        if(arrowUpNode !== null){
-          arrowUpNode.classList.add('active')
-        }
-
-        setTimeout(() => {
-          openDoors()
-          allFloors.forEach(floor => floor.classList.remove('active'))
-        }, 3000) // This class is removed after 3s (to light off)
-        setTimeout(() => {
-          closeDoors()
-        }, 6000) // Close doors after 6s
-
-      } else if (prevFloor > targetFloor) {
-        // const doorsTopPosition = doorsPosition + (targetFloor * 60)
-        // const newDoorsPosition = doorsTopPosition - doorsPosition
-        // this.setState({
-        //   elevatorPosition: newDoorsPosition,
-        // })
-
-        arrowDownNode.classList.add('active')
-        setTimeout(() => {
-          openDoors()
-          allFloors.forEach(floor => {
-            floor.classList.remove('active')
-          })
-          }, 3000)
-          setTimeout(() => {
-            closeDoors()
-          }, 6000)
-      } else {
-        console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
-      }
+    if (prevFloor < targetFloor ) {
+      this.displayArrow('up')
+      // setTimeout(() => {
+      //   openDoors()
+      //   allFloors
+      // }, 3000) // This class is removed after 3s (to light off)
+      // setTimeout(() => {
+      //   closeDoors()
+      // }, 6000) // Close doors after 6s
+    } else if (prevFloor > targetFloor) {
+      this.displayArrow('down')
+      // setTimeout(() => {
+      //   openDoors()
+      //   allFloors.forEach(floor => {
+      //     floor.classList.remove('active')
+      //   })
+      //   }, 3000)
+      //   setTimeout(() => {
+      //     closeDoors()
+      //   }, 6000)
+    } else {
+      console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
     }
   }
 
@@ -106,6 +71,28 @@ class Elevator extends Component {
       console.log('Receive data from `new_elevator_state` socket')
       thus.setFloor(data.elevator.floor)
     })
+  }
+
+  // - display arrow on the current floor
+  displayArrow(direction){
+    this.turnOffArrows()
+
+    console.log(`.arrow-${direction}-${this.getCurrentFloor()}`)
+
+    const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
+
+    if(arrow !== null){
+      arrow.classList.add('active')
+    }
+  }
+
+  getNode() {
+    return ReactDOM.findDOMNode(this)
+  }
+
+  turnOffArrows(){
+    document.querySelectorAll('.arrow')
+            .forEach(f => f.classList.remove('active'))
   }
 
   // get state of `elevatorPosition` and prevent datashit
