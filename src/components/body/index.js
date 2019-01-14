@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import {faArrowDown, faArrowUp, faKey} from '@fortawesome/free-solid-svg-icons'
+import {faArrowDown, faArrowUp, faKey, faAngleLeft, faAngleRight, faUnlock} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import  reverse from 'lodash/reverse'
 
@@ -178,20 +178,31 @@ class Body extends Component {
           />
         }
         <div className="keypad-container">
-          <button onClick={this.openDoors}>Ouvrir</button><button onClick={this.closeDoors}>Fermer</button>
           <div className="keypad">
             <div className="screen">
                 <div className="numberEmp">{targetFloor}</div>
                 <div className="test">
-                <div className="arrow">
-                  <span>
-                    {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
-                    {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
-                  </span>
-                </div>
-                <div className="ElevatorRange">
-                  {meter}m
-                </div>
+                <div className="MobileView">
+                  <div className="TotalFloor">
+                    {isMobile && <p>Total floors : 9</p>}
+                  </div>
+                  <div className="CurrentFloor">
+                    {isMobile && <p>Current floor : {targetFloor}</p>}
+                  </div>
+                  <div className="ElevatorRange">
+                    {meter}m
+                    {isMobile && <span className="arrow">
+                      {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
+                      {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
+                    </span>}
+                  </div>
+                  </div>
+                  {!isMobile && <div className="arrow">
+                    <span>
+                      {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
+                      {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
+                    </span>
+                  </div>}
                 </div>
             </div>
             <div className="keyboard">
@@ -201,7 +212,8 @@ class Body extends Component {
                       {number}
                   </li>
                 ))}
-                <li className={`key faKey ${isLocked ? 'locked' : ''}`}  onClick={this.onLock}><FontAwesomeIcon icon={faKey}/></li>
+                <li onClick={this.openDoors} className="key open faAngleLeft faAngleRight"><FontAwesomeIcon icon={faAngleLeft} /><FontAwesomeIcon icon={faAngleRight} /></li>
+                <li onClick={this.closeDoors} className="key close faAngleLeft faAngleRight"><FontAwesomeIcon icon={faAngleRight} /><FontAwesomeIcon icon={faAngleLeft} /></li>
               </ol>
             </div>
           </div>
