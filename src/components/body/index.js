@@ -7,6 +7,10 @@ import  reverse from 'lodash/reverse'
 import Elevator from './elevator'
 import './style.css'
 
+import { ENDPOINT } from '../../config'
+
+const axios = require('axios')
+
 class Body extends Component {
   constructor(props){
     super (props)
@@ -137,6 +141,18 @@ class Body extends Component {
     this.setState({ isLocked: !isLocked })
   }
 
+  requestFloor = (number) => {
+    const url = `${ENDPOINT}/floor/${number}`
+
+
+
+    console.log(`Try to request ${url}`)
+
+    axios.get(url)
+      .then((resp) => console.log(`Requested: ${url}`))
+      .catch((error) => console.error(error))
+  }
+
   openDoors = () => {
     this.setState({ doorsAreOpening: true })
   }
@@ -192,7 +208,7 @@ class Body extends Component {
             <div className="keyboard">
               <ol className="keys">
                 {reverse(numbers.map((number) =>
-                  <li className={`key key-${number} numbKey`} onClick={this.checkFloor.bind(this,number)} key={number}>
+                  <li className={`key key-${number} numbKey`} onClick={this.requestFloor.bind(this, number)} key={number}>
                       {number}
                   </li>
                 ))}
