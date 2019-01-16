@@ -106,6 +106,7 @@ class Elevator extends Component {
   render() {
     const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { elevatorPosition } = this.state
+    const { doorsAreOpening } = this.props
 
     return (
       <div className="elevator-container">
@@ -125,7 +126,7 @@ class Elevator extends Component {
                   </div>
                 ))}
               </div>
-              <Door elevatorPosition={elevatorPosition} />
+              <Door elevatorPosition={elevatorPosition} doorsAreOpening={doorsAreOpening} />
           </div>
           <div className="right">
           {reverse(floors.map((floor, index) =>

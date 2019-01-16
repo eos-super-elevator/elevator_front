@@ -153,10 +153,10 @@ class Body extends Component {
       .catch((error) => console.error(error))
   }
 
+  // Open / close doors with keypad
   openDoors = () => {
     this.setState({ doorsAreOpening: true })
   }
-
   closeDoors = () => {
     this.setState({ doorsAreOpening: false })
   }
