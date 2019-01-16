@@ -12,7 +12,7 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elevatorPosition: null,
+      elevatorPosition: undefined,
       direction: 'up'
     }
     this.doors = createRef()
@@ -27,6 +27,7 @@ class Elevator extends Component {
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
       thus.setElevator(data.elevator)
+      // console.log(data)
     })
     socket.emit('updated_elevator')
   }
@@ -64,7 +65,6 @@ class Elevator extends Component {
     if (floorInt !== this.getCurrentFloor()) {
       this.setState({ elevatorPosition: floorInt })
     }
-
   }
 
   componentDidMount() {
