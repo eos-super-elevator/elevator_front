@@ -145,7 +145,7 @@ class Body extends Component {
     const url = `${ENDPOINT}/floor/${number}`
 
 
-
+  this.checkFloor(number);
     console.log(`Try to request ${url}`)
 
     axios.get(url)

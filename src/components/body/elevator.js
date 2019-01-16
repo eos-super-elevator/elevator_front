@@ -12,24 +12,31 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elevatorPosition: 0
+      elevatorPosition: 0,
+      direction: 'up'
     }
     this.doors = createRef()
     this.leftDoor = createRef()
     this.rightDoor = createRef()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,prevState) {
+    // console.log(prevProps.direction)
     let prevFloor = prevProps.elevatorPosition
+    let wayToGo = prevState.direction
+    console.log(wayToGo);
+    // console.log(prevProps);
     let targetFloor = this.getCurrentFloor()
 
-    if(prevFloor === undefined){
-      prevFloor = 0
-    }
-
-    if (prevFloor < targetFloor ) {
+    // if(prevFloor === undefined){
+    //   prevFloor = 0
+    // }
+    console.log(prevFloor)
+    if (wayToGo === "up" ) {
       this.displayArrow('up')
-    } else if (prevFloor > targetFloor) {
+      console.log('up')
+    } else if (wayToGo === "down") {
+      console.log('down')
       this.displayArrow('down')
     } else {
       console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
@@ -50,7 +57,8 @@ class Elevator extends Component {
     const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
-      thus.setFloor(data.elevator.floor)
+      // console.log(data.elevator)
+      thus.setElevator(data.elevator)
     })
   }
 
@@ -75,13 +83,24 @@ class Elevator extends Component {
   }
 
   // set floor of the elevator and
-  setFloor(floor) {
+  setElevator(elevator) {
     // prevent fucking float
-    const floorInt = Math.round(floor)
+    // console.log(elevator.direction);
+    if(elevator.direction === "up"){
+      this.setState({ direction: 'up' })
+    }else{
+      this.setState({ direction: 'down' })
+    }
+    const floorInt = Math.round(elevator.floor)
     // render only if needed
     if (floorInt !== this.getCurrentFloor()) {
       this.setState({ elevatorPosition: floorInt })
     }
+    console.log(elevator);
+    // const destination = elevator.valueOf()
+    // this.setState({
+    //   lastFloor : elevator.requested_floor[0],
+    // })
   }
 
   render() {
