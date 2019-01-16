@@ -12,41 +12,14 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elevatorPosition: 0,
+      elevatorPosition: null,
       direction: 'up'
     }
     this.doors = createRef()
     this.leftDoor = createRef()
     this.rightDoor = createRef()
   }
-
-  componentDidUpdate(prevProps,prevState) {
-    // console.log(prevProps.direction)
-    let prevFloor = prevProps.elevatorPosition
-    let wayToGo = prevState.direction
-    let targetFloor = this.getCurrentFloor()
-
-    if (wayToGo === "up" ) {
-
-      this.displayArrow('up')
-
-    } else if (wayToGo === "down") {
-
-      this.displayArrow('down')
-
-    } else {
-      console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
-    }
-  }
-
-  componentWillUnmount() {
-    this.clearTimeout()
-  }
-
-  componentDidMount() {
-    this.connectSocket()
-  }
-
+  
   // connect on `new_elevator_state` socket and listen changes
   connectSocket() {
     const socket = socketIOClient(ENDPOINT)
@@ -55,6 +28,7 @@ class Elevator extends Component {
     socket.on('new_elevator_state', (data) => {
       thus.setElevator(data.elevator)
     })
+    socket.emit('updated_elevator')
   }
 
   // display arrow on the current floor
@@ -76,7 +50,7 @@ class Elevator extends Component {
   getCurrentFloor(){
     return Math.round(this.state.elevatorPosition)
   }
-
+  
   // set floor of the elevator and
   setElevator(elevator) {
     // prevent fucking float
@@ -91,6 +65,37 @@ class Elevator extends Component {
       this.setState({ elevatorPosition: floorInt })
     }
 
+  }
+
+  componentDidMount() {
+    this.connectSocket()
+  }
+
+  componentDidUpdate(prevProps,prevState) {
+    // console.log(prevProps.direction)
+    let prevFloor = prevProps.elevatorPosition
+    let wayToGo = prevState.direction
+    console.log(wayToGo);
+    // console.log(prevProps);
+    let targetFloor = this.getCurrentFloor()
+
+    // if(prevFloor === undefined){
+    //   prevFloor = 0
+    // }
+    console.log(prevFloor)
+    if (wayToGo === "up" ) {
+      this.displayArrow('up')
+      console.log('up')
+    } else if (wayToGo === "down") {
+      console.log('down')
+      this.displayArrow('down')
+    } else {
+      console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
+    }
+  }
+
+  componentWillUnmount() {
+    this.clearTimeout()
   }
 
   render() {
