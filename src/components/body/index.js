@@ -8,6 +8,7 @@ import Elevator from './elevator'
 import './style.css'
 
 import { ENDPOINT } from '../../config'
+import socketIOClient from "socket.io-client";
 
 const axios = require('axios')
 
@@ -15,6 +16,7 @@ class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
+      currentFloor : null,
       targetFloor : null,
       lastFloor : null,
       isGoingUp : false,
@@ -103,13 +105,11 @@ class Body extends Component {
     const heightStart = 4 * lastFloor;
     const heightEnd = 4 * floor;
     let travelingHeight = 0;
-    let floorVisited = 0;
+    // let floorVisited = 0;
     if(floor > lastFloor){
       //Monter
-      floorVisited = floor - lastFloor;
-      // console.log("nombre d'étage à parcourir :"+ floorVisited);
+      // floorVisited = floor - lastFloor;
       travelingHeight = heightEnd - heightStart;
-      // console.log("Distance à parcourir " + travelingHeight);
       let timeTravel = travelingHeight * (3/4);
       this.setState({
 
@@ -119,21 +119,18 @@ class Body extends Component {
 
     }else{
       //Descendre
-      // console.log('Etage cible :'+ floor);
-      // console.log('Etage de départ : ' + lastFloor);
-      // console.log('Hauteur de départ ' + heightStart);
-      // console.log("Hauteur de d'arrivé " + heightEnd);
-      // console.log("nombre d'étage à parcourir :"+ floorVisited);
       travelingHeight = heightStart- heightEnd;
-      // console.log("Distance à parcourir " + travelingHeight);
       let timeTravel = travelingHeight * (3/4);
       this.decrementer(timeTravel,0,heightStart,heightEnd)
     }
   }
-
+  componentDidMount() {
+    this.connectSocket()
+  }
 
   componentWillUnmount() {
     this.clearTimeout()
+
   }
 
   onLock = () => {
@@ -157,12 +154,28 @@ class Body extends Component {
     this.setState({ doorsAreOpening: true })
   }
 
+  connectSocket() {
+    const socket = socketIOClient(ENDPOINT)
+    const thus = this
+    // update floor when receive some data
+    socket.on('new_elevator_state', (data) => {
+      thus.setElevator(data.elevator)
+    })
+  }
+  setElevator(elevator) {
+    // prevent float
+    this.setState({ targetFloor : Math.round(elevator.floor),
+                  currentFloor : elevator.floor
+    })
+    // render only if needed
+
+  }
   closeDoors = () => {
     this.setState({ doorsAreOpening: false })
   }
 
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening } = this.state
+    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening, currentFloor } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
 

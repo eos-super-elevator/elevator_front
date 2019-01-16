@@ -24,20 +24,16 @@ class Elevator extends Component {
     // console.log(prevProps.direction)
     let prevFloor = prevProps.elevatorPosition
     let wayToGo = prevState.direction
-    console.log(wayToGo);
-    // console.log(prevProps);
     let targetFloor = this.getCurrentFloor()
 
-    // if(prevFloor === undefined){
-    //   prevFloor = 0
-    // }
-    console.log(prevFloor)
     if (wayToGo === "up" ) {
+
       this.displayArrow('up')
-      console.log('up')
+
     } else if (wayToGo === "down") {
-      console.log('down')
+
       this.displayArrow('down')
+
     } else {
       console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
     }
@@ -57,7 +53,6 @@ class Elevator extends Component {
     const thus = this
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
-      // console.log(data.elevator)
       thus.setElevator(data.elevator)
     })
   }
@@ -85,7 +80,6 @@ class Elevator extends Component {
   // set floor of the elevator and
   setElevator(elevator) {
     // prevent fucking float
-    // console.log(elevator.direction);
     if(elevator.direction === "up"){
       this.setState({ direction: 'up' })
     }else{
@@ -96,11 +90,7 @@ class Elevator extends Component {
     if (floorInt !== this.getCurrentFloor()) {
       this.setState({ elevatorPosition: floorInt })
     }
-    console.log(elevator);
-    // const destination = elevator.valueOf()
-    // this.setState({
-    //   lastFloor : elevator.requested_floor[0],
-    // })
+
   }
 
   render() {
