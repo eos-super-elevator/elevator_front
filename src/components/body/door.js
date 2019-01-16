@@ -27,12 +27,12 @@ class Door extends Component {
 
   render (){
     const { open } = this.state
-    const { elevatorPosition } = this.props
+    const { elevatorPosition, doorsAreOpening } = this.props
 
     return (
       <div className="doors isMoving" style={{ bottom: elevatorPosition * 60}}>
-        <div className={`door left-door ${open ? 'isOpened' : 'isClosed'}`}></div>
-        <div className={`door right-door ${open ? 'isOpened' : 'isClosed'}`}></div>
+        <div className={`door left-door ${open || doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
+        <div className={`door right-door ${open || doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
       </div>
     )
   }
