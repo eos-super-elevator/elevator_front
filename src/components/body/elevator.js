@@ -12,12 +12,69 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elevatorPosition: 0,
+      elevatorPosition: null,
       direction: 'up'
     }
     this.doors = createRef()
     this.leftDoor = createRef()
     this.rightDoor = createRef()
+  }
+
+  // connect on `new_elevator_state` socket and listen changes
+  connectSocket() {
+    const socket = socketIOClient(ENDPOINT)
+    const thus = this
+    // update floor when receive some data
+    socket.on('new_elevator_state', (data) => {
+      // console.log(data.elevator)
+      thus.setElevator(data.elevator)
+    })
+    socket.emit('updated_elevator')
+  }
+
+  // display arrow on the current floor
+  displayArrow(direction){
+    this.turnOffArrows()
+    const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
+
+    if(arrow !== null){
+      arrow.classList.add('active')
+    }
+  }
+
+  turnOffArrows(){
+    document.querySelectorAll('.arrow')
+            .forEach(f => f.classList.remove('active'))
+  }
+
+  // get state of `elevatorPosition` and prevent datashit
+  getCurrentFloor(){
+    return Math.round(this.state.elevatorPosition)
+  }
+  
+  // set floor of the elevator and
+  setElevator(elevator) {
+    // prevent fucking float
+    // console.log(elevator.direction);
+    if(elevator.direction === "up"){
+      this.setState({ direction: 'up' })
+    }else{
+      this.setState({ direction: 'down' })
+    }
+    const floorInt = Math.round(elevator.floor)
+    // render only if needed
+    if (floorInt !== this.getCurrentFloor()) {
+      this.setState({ elevatorPosition: floorInt })
+    }
+    console.log(elevator);
+    // const destination = elevator.valueOf()
+    // this.setState({
+    //   lastFloor : elevator.requested_floor[0],
+    // })
+  }
+
+  componentDidMount() {
+    this.connectSocket()
   }
 
   componentDidUpdate(prevProps,prevState) {
@@ -45,62 +102,6 @@ class Elevator extends Component {
 
   componentWillUnmount() {
     this.clearTimeout()
-  }
-
-  componentDidMount() {
-    this.connectSocket()
-  }
-
-  // connect on `new_elevator_state` socket and listen changes
-  connectSocket() {
-    const socket = socketIOClient(ENDPOINT)
-    const thus = this
-    // update floor when receive some data
-    socket.on('new_elevator_state', (data) => {
-      // console.log(data.elevator)
-      thus.setElevator(data.elevator)
-    })
-  }
-
-  // display arrow on the current floor
-  displayArrow(direction){
-    this.turnOffArrows()
-    const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
-
-    if(arrow !== null){
-      arrow.classList.add('active')
-    }
-  }
-
-  turnOffArrows(){
-    document.querySelectorAll('.arrow')
-            .forEach(f => f.classList.remove('active'))
-  }
-
-  // get state of `elevatorPosition` and prevent datashit
-  getCurrentFloor(){
-    return Math.round(this.state.elevatorPosition)
-  }
-
-  // set floor of the elevator and
-  setElevator(elevator) {
-    // prevent fucking float
-    // console.log(elevator.direction);
-    if(elevator.direction === "up"){
-      this.setState({ direction: 'up' })
-    }else{
-      this.setState({ direction: 'down' })
-    }
-    const floorInt = Math.round(elevator.floor)
-    // render only if needed
-    if (floorInt !== this.getCurrentFloor()) {
-      this.setState({ elevatorPosition: floorInt })
-    }
-    console.log(elevator);
-    // const destination = elevator.valueOf()
-    // this.setState({
-    //   lastFloor : elevator.requested_floor[0],
-    // })
   }
 
   render() {
