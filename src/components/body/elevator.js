@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react'
 import ReactDOM from 'react-dom'
 import socketIOClient from 'socket.io-client'
 import reverse from 'lodash/reverse' // Reverse the order in an array
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa'
+import { FaArrowDown, FaArrowUp, FaLock } from 'react-icons/fa'
 import './style.css'
 import Door from './door'
 
@@ -12,8 +12,10 @@ class Elevator extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elevatorPosition: null,
-      direction: 'up'
+      floors: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      elevatorPosition: undefined,
+      direction: 'up',
+      access: false
     }
     this.doors = createRef()
     this.leftDoor = createRef()
@@ -27,15 +29,27 @@ class Elevator extends Component {
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
       thus.setElevator(data.elevator)
+      // console.log(data.elevator.floor)
+      thus.setAccess(data.access)
     })
     socket.emit('updated_elevator')
+  }
+
+  setAccess(access) {
+    if(access === 'authorized') {
+      this.setState({ access: true })
+    } else if(access === 'denied') {
+      this.setState({ access: false })
+    }
+    setTimeout(() => { 
+      this.setState({ access: false })
+    }, 5000)
   }
 
   // display arrow on the current floor
   displayArrow(direction){
     this.turnOffArrows()
     const arrow = ReactDOM.findDOMNode(this).querySelector(`.arrow-${direction}-${this.getCurrentFloor()}`)
-
     if(arrow !== null){
       arrow.classList.add('active')
     }
@@ -64,45 +78,29 @@ class Elevator extends Component {
     if (floorInt !== this.getCurrentFloor()) {
       this.setState({ elevatorPosition: floorInt })
     }
-
   }
-
+  
   componentDidMount() {
     this.connectSocket()
   }
 
   componentDidUpdate(prevProps,prevState) {
-    // console.log(prevProps.direction)
     let prevFloor = prevProps.elevatorPosition
     let wayToGo = prevState.direction
-    console.log(wayToGo);
-    // console.log(prevProps);
     let targetFloor = this.getCurrentFloor()
 
-    // if(prevFloor === undefined){
-    //   prevFloor = 0
-    // }
-    console.log(prevFloor)
     if (wayToGo === "up" ) {
       this.displayArrow('up')
-      console.log('up')
     } else if (wayToGo === "down") {
-      console.log('down')
       this.displayArrow('down')
     } else {
       console.log(`Argument error: Asked ${targetFloor} but was on ${prevFloor}`)
     }
   }
 
-  componentWillUnmount() {
-    this.clearTimeout()
-  }
-
   render() {
-    const floors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    const { elevatorPosition } = this.state
-    const { doorsAreOpening } = this.props
-
+    const { floors, elevatorPosition, access } = this.state
+    const { doorsAreOpening, restrictedFloors} = this.props
     return (
       <div className="elevator-container">
         <div className="elevator">
@@ -115,9 +113,13 @@ class Elevator extends Component {
           </div>
           <div className="center">
               <div className="stages">
-                {reverse(floors.map((floor, index) =>
-                  <div className={`stage stage-${floor}`} key={index}>
-                    <span className="stage-number">{floor}</span>
+                {reverse(restrictedFloors.map((floor, index) =>
+                  <div className={`stage stage-${floor.id}`} key={index}>
+                    <span className="stage-number">{floor.id}</span>
+                    {!access && <div className={`lock-icon-wrapper`}>
+                      {floor.restricted_area && <FaLock id={`locked-floor-${floor.id}`} />}
+                    </div>
+                    }
                   </div>
                 ))}
               </div>

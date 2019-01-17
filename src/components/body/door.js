@@ -1,9 +1,8 @@
-import React, { Component, createRef } from 'react'
+import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
 import { ENDPOINT } from '../../config'
 
 class Door extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +27,6 @@ class Door extends Component {
   render (){
     const { open } = this.state
     const { elevatorPosition, doorsAreOpening } = this.props
-
     return (
       <div className="doors isMoving" style={{ bottom: elevatorPosition * 60}}>
         <div className={`door left-door ${open || doorsAreOpening ? 'isOpened' : 'isClosed'}`}></div>
