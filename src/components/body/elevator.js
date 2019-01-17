@@ -29,7 +29,6 @@ class Elevator extends Component {
     // update floor when receive some data
     socket.on('new_elevator_state', (data) => {
       thus.setElevator(data.elevator)
-      // console.log(data.elevator.floor)
       thus.setAccess(data.access)
     })
     socket.emit('updated_elevator')
