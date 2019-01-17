@@ -159,9 +159,30 @@ li svg {
 .stage {
   height: 60px;
   line-height: 60px;
+  position: relative;
 }
 .stage-number {
   color: white;
+}
+.lock-icon-wrapper {
+  position: absolute;
+  top: 0;
+  right: -12px;
+  color: red;
+  font-size: 30px;
+  opacity: 0.3;
+  animation: bounce .5s infinite alternate;
+}
+@keyframes activate {
+  from { color: green; }
+  to { opacity: 0; }
+}
+.unlocked {
+  animation: activate 2s 0;
+}
+@keyframes bounce {
+  from { opacity: 0.4; }
+  to { opacity: 0.2;}
 }
 .doors {
   position: absolute;

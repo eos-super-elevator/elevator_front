@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import {faArrowDown, faArrowUp, faKey, faAngleLeft, faAngleRight, faUnlock} from '@fortawesome/free-solid-svg-icons'
+import {faArrowDown, faArrowUp, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import  reverse from 'lodash/reverse'
 
@@ -16,15 +16,32 @@ class Body extends Component {
   constructor(props){
     super (props)
     this.state = {
-      currentFloor : null,
-      targetFloor : null,
+      currentFloor : undefined,
       lastFloor : null,
       isGoingUp : false,
       isGoingDown: false,
       meter: 0,
-      isLocked: false,
-      doorsAreOpening: false
+      doorsAreOpening: false,
+      restrictedFloors: []
     }
+  }
+
+  connectSocket() {
+    const socket = socketIOClient(ENDPOINT)
+    const thus = this
+    socket.on('new_elevator_state', (data) => {
+      thus.getRestrictedFloors(data.building)
+      thus.getCurrentFloor(data.elevator)
+    })
+    socket.emit('updated_elevator')
+  }
+
+  getRestrictedFloors = (floors) => {
+    this.setState({ restrictedFloors: floors })
+  }
+
+  getCurrentFloor = (elevator) => {
+    this.setState({ currentFloor: Math.round(elevator.floor) })
   }
 
   checkFloor = (targetFloor) => {
@@ -59,21 +76,8 @@ class Body extends Component {
     }
   }
 
-  /*
-      * Tableau avec chaque étage ainsi que sa hauteur en mètres (1,33 m par seconde de vitesse de montée)
-      * En fonction de l'étage selectionné et de l'étage de départ faire le calcul correspondant
-      * variable :
-      * - L'hauteur au départ
-      * - L'hauteur cible
-      * - Temps nécéssaire pour parcourir le chemin : 3 sec/étages
-      * -
-      * */
-
   decrementer = (timeTravel, startTravel,current_height,Destination ) => {
-
     let timerRun = setInterval(() => {
-      // console.log('hello')
-      // console.log('mètre actuel : '+this.state.meter);
       startTravel++ ;
     }, 1000);
     let timerRun2 = setInterval(() => {
@@ -108,13 +112,11 @@ class Body extends Component {
     // let floorVisited = 0;
     if(floor > lastFloor){
       //Monter
-      // floorVisited = floor - lastFloor;
       travelingHeight = heightEnd - heightStart;
       let timeTravel = travelingHeight * (3/4);
       this.setState({
 
       })
-      // console.log('time travel '+ timeTravel)
       this.decrementer(timeTravel,0,heightStart,heightEnd)
 
     }else{
@@ -124,25 +126,10 @@ class Body extends Component {
       this.decrementer(timeTravel,0,heightStart,heightEnd)
     }
   }
-  componentDidMount() {
-    this.connectSocket()
-  }
-
-  componentWillUnmount() {
-    this.clearTimeout()
-
-  }
-
-  onLock = () => {
-    const { isLocked } = this.state
-    this.setState({ isLocked: !isLocked })
-  }
 
   requestFloor = (number) => {
     const url = `${ENDPOINT}/floor/${number}`
-
-
-  this.checkFloor(number);
+    this.checkFloor(number);
     console.log(`Try to request ${url}`)
 
     axios.get(url)
@@ -155,61 +142,51 @@ class Body extends Component {
     this.setState({ doorsAreOpening: true })
   }
 
-  connectSocket() {
-    const socket = socketIOClient(ENDPOINT)
-    const thus = this
-    // update floor when receive some data
-    socket.on('new_elevator_state', (data) => {
-      thus.setElevator(data.elevator)
-    })
-  }
-  setElevator(elevator) {
-    // prevent float
-    this.setState({ targetFloor : Math.round(elevator.floor),
-                  currentFloor : elevator.floor
-    })
-    // render only if needed
-
-  }
   closeDoors = () => {
     this.setState({ doorsAreOpening: false })
   }
 
+  componentDidMount() {
+    this.connectSocket()
+  }
+
   render() {
-    const { isGoingUp, isGoingDown, targetFloor, meter, isLocked, doorsAreOpening, currentFloor } = this.state
+    const { isGoingUp, isGoingDown, currentFloor, meter, isLocked, doorsAreOpening, restrictedFloors } = this.state
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const isMobile = window.innerWidth <= 768 // Check window's width
-
     return (
       <div className="body">
         {!isMobile &&
           <Elevator
-            targetFloor={targetFloor}
+            targetFloor={currentFloor}
             isLocked={isLocked}
             doorsAreOpening={doorsAreOpening}
             openDoors={this.openDoors}
             closeDoors={this.closeDoors}
+            restrictedFloors={restrictedFloors}
           />
         }
         <div className="keypad-container">
           <div className="keypad">
             <div className="screen">
-                <div className="numberEmp">{targetFloor}</div>
-                <div className="test">
-                <div className="MobileView">
-                  <div className="TotalFloor">
-                    {isMobile && <p>Total floors : 9</p>}
-                  </div>
-                  <div className="CurrentFloor">
-                    {isMobile && <p>Current floor : {targetFloor}</p>}
-                  </div>
-                  <div className="ElevatorRange">
-                    {meter}m
-                    {isMobile && <span className="arrow">
-                      {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
-                      {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
-                    </span>}
-                  </div>
+              <div className="numberEmp">
+                {currentFloor}
+              </div>
+              <div className="test">
+              <div className="MobileView">
+                <div className="TotalFloor">
+                  {isMobile && <p>Total floors : 9</p>}
+                </div>
+                <div className="CurrentFloor">
+                  {isMobile && <p>Current floor : {currentFloor}</p>}
+                </div>
+                <div className="ElevatorRange">
+                  {meter}m
+                  {isMobile && <span className="arrow">
+                    {isGoingUp && <FontAwesomeIcon icon={faArrowUp} />}
+                    {isGoingDown && <FontAwesomeIcon icon={faArrowDown} />}
+                  </span>}
+                </div>
                   </div>
                   {!isMobile && <div className="arrow">
                     <span>
